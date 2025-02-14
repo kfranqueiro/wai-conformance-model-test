@@ -1,6 +1,10 @@
 ---
+import { BreaksList } from "@/components/BreaksList";
 import MetaFailureSection from "@/components/meta/MetaFailureSection.astro";
 import MetaLayout from "@/layouts/MetaLayout.astro";
+import { getCollection } from "astro:content";
+
+const breaks = await getCollection("breaks");
 ---
 
 <MetaLayout title="General Information">
@@ -52,6 +56,11 @@ import MetaLayout from "@/layouts/MetaLayout.astro";
         </p>
       )
     }
+
+    <BreaksList client:load breaks={breaks} />
+
+    <hr />
+    (Existing stuff beyond here, to be replaced)
 
     <MetaFailureSection href="museum/" title="Home & Search">
       <p>This section includes the home page and the search results page.</p>
@@ -1181,7 +1190,18 @@ import MetaLayout from "@/layouts/MetaLayout.astro";
   }
 </script>
 
-<style>
+<style is:global>
+  form {
+    & div {
+      display: flex;
+      gap: 1rem;
+      margin: 0.5rem;
+    }
+    & label {
+      width: 8em;
+    }
+  }
+
   dt {
     font-weight: bold;
   }
