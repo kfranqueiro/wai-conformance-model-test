@@ -31,6 +31,16 @@ const collectionLabels = {
         {...(i && getMode() === "fixed" && { inert: true })}
       >
         <FixableRegion>
+          {
+            /**
+             * @break
+             * wcag2SuccessCriterion: 1.3.2
+             * wcag3Requirement: Order of content
+             * description: The overline text over each title in the carousel uses space characters between each letter.
+             * locationName: Home
+             * locationPath: /
+             */
+          }
           <div class="overline">L A T E S T &nbsp; {
             collectionLabels[entry.collection].toUpperCase().split("").join(" ")
           }</div>
