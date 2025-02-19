@@ -1,0 +1,91 @@
+[
+  {
+    "id": "Home & Search",
+    "path": ""
+  },
+  {
+    "id": "Collections",
+    "path": "collections/"
+  },
+  {
+    "id": "Containers Collection",
+    "path": "collections/containers/",
+    "description": "This section demonstrates content that a number of small accessibility failures."
+  },
+  {
+    "id": "Dishes Collection",
+    "path": "collections/dishes/"
+  },
+  {
+    "id": "Glass Collection",
+    "path": "collections/glass/"
+  },
+  {
+    "id": "Home Collection",
+    "path": "collections/home/",
+    "photosensitivity": true,
+    "description": "This section demonstrates content that has few accessibility failures, BUT the failures that exist could cause individuals with disabilities physical or psychological harm."
+  },
+  {
+    "id": "Music Collection",
+    "path": "collections/music/"
+  },
+  {
+    "id": "Sports Collection",
+    "path": "collections/sports/"
+  },
+  {
+    "id": "Technology Collection",
+    "path": "collections/technology/",
+    "description": "This section demonstrates content that has very few accessibility failures in the programmatic portion of the page but has a number of failures in the content."
+  },
+  {
+    "id": "Early Home Computers Event",
+    "path": "early-home-computers-event/",
+    "description": "This section demonstrates issues with focus management, accessible names, incompletely implement controls for user interface components with ARIA roles, reading order, and Windows high-contrast mode.",
+    "discussionItems": [
+      "Is misusing CSS forced colors something that WCAG 3 needs to address?",
+      "Do WCAG 3's Adjust Color and/or AT Control have the same coverage as Section 508's and EN 301 549's User Preference requirement?",
+      "Should sticky content (e.g., headers and footers) take up a maximum amount of space when a user agent is zoomed in?",
+      "Should text in cards, where the entire card is clickable, be selectable? Is this an accessibility issue or general UX?"
+    ]
+  },
+  {
+    "id": "About",
+    "path": "about/",
+    "discussionItems": [
+      "Is the hard-to-read text that's used in the mission statement and table headers just bad usability or an accessibility issue?",
+      "Is using the ARIA grid role on a table of static content an issue?"
+    ]
+  },
+  {
+    "id": "Blog",
+    "path": "blog/",
+    "description": "This section includes the Blog page and related article subpages."
+  },
+  {
+    "id": "Gift Shop",
+    "path": "gift-shop/",
+    "description": "This section includes the Gift shop, product subpages and checkout process."
+  },
+  {
+    "id": "Help",
+    "path": "help/"
+  },
+  {
+    "id": "Museum Map",
+    "path": "map/"
+  },
+  {
+    "id": "Register & Sign In",
+    "path": "login/"
+  },
+  {
+    "id": "Take a Tour",
+    "path": "tour/"
+  },
+  {
+    "id": "Volunteer",
+    "path": "volunteer/"
+  }
+]
