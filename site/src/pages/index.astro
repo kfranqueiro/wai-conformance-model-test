@@ -1,10 +1,17 @@
 ---
+import { type CollectionEntry, getCollection } from "astro:content";
 import { BreaksList } from "@/components/BreaksList";
 import MetaFailureSection from "@/components/meta/MetaFailureSection.astro";
 import MetaLayout from "@/layouts/MetaLayout.astro";
-import { getCollection } from "astro:content";
 
 const breaks = await getCollection("breaks");
+const breakSectionsMap = (await getCollection("breakSections")).reduce(
+  (map, section) => {
+    map[section.id] = section;
+    return map;
+  },
+  {} as Record<string, CollectionEntry<"breakSections">>
+);
 ---
 
 <MetaLayout title="General Information">
@@ -57,7 +64,7 @@ const breaks = await getCollection("breaks");
       )
     }
 
-    <BreaksList client:load breaks={breaks} />
+    <BreaksList client:load breaks={breaks} breakSectionsMap={breakSectionsMap} />
 
     <hr />
     (Existing stuff beyond here, to be replaced)

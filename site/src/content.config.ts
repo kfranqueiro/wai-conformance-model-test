@@ -1,5 +1,5 @@
 import { parseFrontmatter } from "@astrojs/markdown-remark";
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
 import { defineCollection, reference, z } from "astro:content";
 import fg from "fast-glob";
 
@@ -17,6 +17,17 @@ const baseImageSchema = z.object({
 });
 
 export const collections = {
+  breakSections: defineCollection({
+    loader: file("src/content/sections.json"),
+    schema: z.object({
+      description: z.string().optional(),
+      discussionItems: z.array(z.string()).optional(),
+      id: z.string(),
+      // Allow empty path for Home but otherwise require trailing slash
+      path: z.string().regex(/^$|\/$/),
+      photosensitivity: z.boolean().optional(),
+    }),
+  }),
   breaks: defineCollection({
     loader: async () => {
       const paths = await fg(["**/*.astro", "content/**/[^_]*.md"], {
@@ -27,9 +38,6 @@ export const collections = {
         const content = await readFile(join("src", path), "utf8");
         if (path.endsWith(".astro")) {
           // Support /** @break ... */ blocks in astro templates
-          // TODO: relocate this to a programmatic API,
-          // so that it can be used to populate "what's wrong with this page?"
-          // (Maybe the programmatic API can actually be useful for the collection?...)
           for (const match of regExpMatchGenerator(
             /\/\*[\s\*]*@break([\s\S]*?)\*\//g,
             content
@@ -58,10 +66,8 @@ export const collections = {
     },
     schema: z
       .object({
-        description: z.string(),
-        locationName: z.string(),
-        // locationPath: true = use current page's path (for non-dynamic src/pages routes only)
-        locationPath: z.string(),
+        description: z.string().or(z.array(z.string())),
+        location: reference("breakSections"),
         wcag2SuccessCriterion: z
           .enum(
             Object.keys(wcag2SuccessCriteria) as [
@@ -76,7 +82,7 @@ export const collections = {
         (value) => value.wcag2SuccessCriterion || value.wcag3Requirement,
         {
           message:
-            "One or both of wcag2SuccessCriterion or wcag3Requirement must be set.",
+            "One or both of wcag2SuccessCriterion and/or wcag3Requirement must be set.",
         }
       ),
   }),

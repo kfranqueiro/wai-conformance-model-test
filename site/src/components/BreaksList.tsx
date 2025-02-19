@@ -6,8 +6,11 @@ import { useEffect, useRef, useState, type FormEvent } from "preact/compat";
 import { museumBaseUrl } from "@/lib/constants";
 import { wcag2SuccessCriteria } from "@/lib/wcag";
 
+type BreakSectionsMap = Record<string, CollectionEntry<"breakSections">>;
+
 interface BreaksListProps {
   breaks: CollectionEntry<"breaks">[];
+  breakSectionsMap: BreakSectionsMap;
 }
 
 const formSchema = z.object({
@@ -29,15 +32,20 @@ const getStateFromUrl = () => {
 
 interface BreakAreaLinkProps {
   break: CollectionEntry<"breaks">;
+  breakSectionsMap: BreakSectionsMap;
 }
 
-const BreakAreaLink = ({ break: { data } }: BreakAreaLinkProps) => (
-  <a href={museumBaseUrl.slice(0, -1) + data.locationPath}>
-    {data.locationName}
+const BreakAreaLink = ({
+  break: { data },
+  breakSectionsMap,
+}: BreakAreaLinkProps) => (
+  <a href={museumBaseUrl.slice(0, -1) + breakSectionsMap[data.location.id]}>
+    {data.location.id}
   </a>
 );
 
-interface BreakWcagLabelProps extends BreakAreaLinkProps {
+interface BreakWcagLabelProps {
+  break: CollectionEntry<"breaks">;
   version: z.infer<typeof formSchema.shape.version>;
 }
 
@@ -46,28 +54,29 @@ const BreakWcagLabel = ({ break: { data }, version }: BreakWcagLabelProps) =>
     ? `${data.wcag2SuccessCriterion}: ${wcag2SuccessCriteria[data.wcag2SuccessCriterion!]}`
     : data.wcag3Requirement;
 
-export const BreaksList = ({ breaks }: BreaksListProps) => {
+export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
   const [{ arrangement, query, version }, setValues] = useState(
     formSchema.parse({})
   );
   const listRef = useRef<HTMLDivElement | null>(null);
 
+  const wcagProp =
+    version === "2" ? "wcag2SuccessCriterion" : "wcag3Requirement";
   const locationIteratee = ({ data }: CollectionEntry<"breaks">) =>
-    data.locationName;
+    data.location.id;
   const requirementIteratee = ({ data }: CollectionEntry<"breaks">) =>
-    version === "2" ? data.wcag2SuccessCriterion! : data.wcag3Requirement!;
+    data[wcagProp]!;
   const arrangementIteratee =
     arrangement === "area" ? locationIteratee : requirementIteratee;
 
   const groupedBreaks = groupBy(
     sortBy(
       breaks.filter(({ data }) => {
-        if (version === "2" && !data.wcag2SuccessCriterion) return false;
-        if (version === "3" && !data.wcag3Requirement) return false;
+        if (!data[wcagProp]) return false;
         if (query)
           return (
             data.description.includes(query) ||
-            data.locationName.includes(query) ||
+            data.location.id.includes(query) ||
             (data.wcag2SuccessCriterion &&
               (data.wcag2SuccessCriterion?.includes(query) ||
                 wcag2SuccessCriteria[data.wcag2SuccessCriterion].includes(
@@ -83,7 +92,26 @@ export const BreaksList = ({ breaks }: BreaksListProps) => {
         // In case of tie, sort by the other (subgrouped) property
         arrangement === "area" ? requirementIteratee : locationIteratee,
       ]
-    ),
+    ).reduce((breaks, nextBreak) => {
+      if (!breaks.length) return [nextBreak];
+      const previousBreak = breaks[breaks.length - 1];
+
+      // Collate neighboring breaks
+      if (
+        (arrangement === "area" &&
+          nextBreak.data[wcagProp] === previousBreak.data[wcagProp]) ||
+        (arrangement === "failure" &&
+          nextBreak.data.location === previousBreak.data.location)
+      ) {
+        previousBreak.data.description = ([] as string[]).concat(
+          previousBreak.data.description,
+          nextBreak.data.description
+        );
+      } else {
+        breaks.push(nextBreak);
+      }
+      return breaks;
+    }, [] as CollectionEntry<"breaks">[]),
     arrangementIteratee
   );
 
@@ -146,7 +174,10 @@ export const BreaksList = ({ breaks }: BreaksListProps) => {
           arrangement === "area" ? (
             <section key={name}>
               <h3>
-                <BreakAreaLink break={breaks[0]} />
+                <BreakAreaLink
+                  break={breaks[0]}
+                  breakSectionsMap={breakSectionsMap}
+                />
               </h3>
               <dl>
                 {breaks.map((b) => (
@@ -154,7 +185,9 @@ export const BreaksList = ({ breaks }: BreaksListProps) => {
                     <dt>
                       <BreakWcagLabel break={b} version={version} />
                     </dt>
-                    <dd>{b.data.description}</dd>
+                    {[b.data.description].flat().map((description) => (
+                      <dd>{description}</dd>
+                    ))}
                   </>
                 ))}
               </dl>
@@ -168,9 +201,14 @@ export const BreaksList = ({ breaks }: BreaksListProps) => {
                 {breaks.map((b) => (
                   <>
                     <dt>
-                      <BreakAreaLink break={b} />
+                      <BreakAreaLink
+                        break={b}
+                        breakSectionsMap={breakSectionsMap}
+                      />
                     </dt>
-                    <dd>{b.data.description}</dd>
+                    {[b.data.description].flat().map((description) => (
+                      <dd>{description}</dd>
+                    ))}
                   </>
                 ))}
               </dl>
