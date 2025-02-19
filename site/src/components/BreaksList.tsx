@@ -66,8 +66,10 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
     data.location.id;
   const requirementIteratee = ({ data }: CollectionEntry<"breaks">) =>
     data[wcagProp]!;
-  const arrangementIteratee =
+  const sectionIteratee =
     arrangement === "area" ? locationIteratee : requirementIteratee;
+  const dtIteratee =
+    arrangement === "area" ? requirementIteratee : locationIteratee;
 
   const groupedBreaks = groupBy(
     sortBy(
@@ -87,21 +89,15 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
         return true;
       }),
       // FIXME: this probably won't sort section numbers correctly (e.g. 2.4.1, 2.4.11, 2.4.2)
-      [
-        arrangementIteratee,
-        // In case of tie, sort by the other (subgrouped) property
-        arrangement === "area" ? requirementIteratee : locationIteratee,
-      ]
+      [sectionIteratee, dtIteratee]
     ).reduce((breaks, nextBreak) => {
       if (!breaks.length) return [nextBreak];
       const previousBreak = breaks[breaks.length - 1];
 
-      // Collate neighboring breaks
+      // Merge descriptions of neighboring breaks for same section and subsection
       if (
-        (arrangement === "area" &&
-          nextBreak.data[wcagProp] === previousBreak.data[wcagProp]) ||
-        (arrangement === "failure" &&
-          nextBreak.data.location === previousBreak.data.location)
+        sectionIteratee(nextBreak) === sectionIteratee(previousBreak) &&
+        dtIteratee(nextBreak) === dtIteratee(previousBreak)
       ) {
         previousBreak.data.description = ([] as string[]).concat(
           previousBreak.data.description,
@@ -112,7 +108,7 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
       }
       return breaks;
     }, [] as CollectionEntry<"breaks">[]),
-    arrangementIteratee
+    sectionIteratee
   );
 
   const onSubmit = (event: FormEvent) => {
