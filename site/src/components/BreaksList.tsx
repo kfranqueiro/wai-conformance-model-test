@@ -170,51 +170,39 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
       </form>
 
       <div ref={listRef} tabindex={-1}>
-        {Object.entries(groupedBreaks).map(([name, breaks]) =>
-          arrangement === "area" ? (
-            <section key={name}>
-              <h3>
+        {Object.entries(groupedBreaks).map(([name, breaks]) => (
+          <section key={name}>
+            <h3>
+              {arrangement === "area" ? (
                 <BreakAreaLink
                   break={breaks[0]}
                   breakSectionsMap={breakSectionsMap}
                 />
-              </h3>
-              <dl>
-                {breaks.map((b) => (
-                  <>
-                    <dt>
-                      <BreakWcagLabel break={b} version={version} />
-                    </dt>
-                    {[b.data.description].flat().map((description) => (
-                      <dd>{description}</dd>
-                    ))}
-                  </>
-                ))}
-              </dl>
-            </section>
-          ) : (
-            <section key={name}>
-              <h3>
+              ) : (
                 <BreakWcagLabel break={breaks[0]} version={version} />
-              </h3>
-              <dl>
-                {breaks.map((b) => (
-                  <>
-                    <dt>
+              )}
+            </h3>
+            <dl>
+              {breaks.map((b) => (
+                <>
+                  <dt>
+                    {arrangement === "area" ? (
+                      <BreakWcagLabel break={b} version={version} />
+                    ) : (
                       <BreakAreaLink
                         break={b}
                         breakSectionsMap={breakSectionsMap}
                       />
-                    </dt>
-                    {[b.data.description].flat().map((description) => (
-                      <dd>{description}</dd>
-                    ))}
-                  </>
-                ))}
-              </dl>
-            </section>
-          )
-        )}
+                    )}
+                  </dt>
+                  {[b.data.description].flat().map((description) => (
+                    <dd>{description}</dd>
+                  ))}
+                </>
+              ))}
+            </dl>
+          </section>
+        ))}
       </div>
     </>
   );
