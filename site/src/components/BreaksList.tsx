@@ -39,7 +39,7 @@ const BreakAreaLink = ({
   break: { data },
   breakSectionsMap,
 }: BreakAreaLinkProps) => (
-  <a href={museumBaseUrl.slice(0, -1) + breakSectionsMap[data.location.id]}>
+  <a href={museumBaseUrl + breakSectionsMap[data.location.id].data.path}>
     {data.location.id}
   </a>
 );
