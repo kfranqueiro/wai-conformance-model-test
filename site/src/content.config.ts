@@ -53,9 +53,11 @@ export const collections = {
       for (const path of paths) {
         const content = await readFile(join("src", path), "utf8");
         if (path.endsWith(".astro")) {
+          const locationMatch = /\/\*[\s\*]*@breaklocation([\s\S]*?)\*\//.exec(content);
+          const location = locationMatch?.[1].trim() || undefined;
           // Support /** @break ... */ blocks in astro templates
           for (const match of regExpMatchGenerator(
-            /\/\*[\s\*]*@break([\s\S]*?)\*\//g,
+            /\/\*[\s\*]*@break\b([\s\S]*?)\*\//g,
             content
           )) {
             const id = `${path}-${match.index}`;
@@ -63,6 +65,7 @@ export const collections = {
             const yaml = match[1].replace(/^\s+\* /gm, "");
             const { frontmatter } = parseFrontmatter(`---\n${yaml}\n---`);
             breaks.push({
+              location,
               ...frontmatter,
               id,
             });
@@ -72,6 +75,7 @@ export const collections = {
           const { frontmatter } = parseFrontmatter(content);
           ((frontmatter.breaks || []) as any[]).forEach((brk, i) => {
             breaks.push({
+              location: frontmatter.breaklocation,
               ...brk,
               id: `${path}-${i}`,
             });
