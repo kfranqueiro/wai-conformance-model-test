@@ -20,14 +20,25 @@ const collectionLabels = {
   exhibits: "Exhibit",
   products: "Merch",
 };
+
+/** @breaklocation Home & Search */
 ---
 
+{
+/**
+  * @break
+  * wcag2SuccessCriterion: 2.2.2
+  * wcag3Requirement: Motion
+  * description:
+  *   - The carousel does not include controls to stop moving and updating.
+  *   - The promotional video at the bottom of the home page loops infinitely and does not have controls to pause.
+  */
+}
 <div class:list={["carousel", getMode()]}>
   {
     entries.map((entry, i) => (
       /**
        * @break
-       * location: Home & Search
        * wcag2SuccessCriterion: 1.4.6
        * wcag3Requirement: Minimum text contrast
        * description: |
@@ -43,7 +54,6 @@ const collectionLabels = {
           {
             /**
              * @break
-             * location: Home & Search
              * wcag2SuccessCriterion: 1.3.2
              * wcag3Requirement: Order of content
              * description: The overline text over each title in the carousel uses space characters between each letter.
