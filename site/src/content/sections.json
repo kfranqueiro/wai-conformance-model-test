@@ -1,7 +1,8 @@
 [
   {
     "id": "Home & Search",
-    "path": ""
+    "path": "",
+    "description": "This section demonstrates content that has a moderate number of accessibility failures. The failures present a mix of those that can be found through automated testing and those that require manual testing."
   },
   {
     "id": "Collections",

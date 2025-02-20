@@ -12,17 +12,27 @@ interface Props {
 }
 
 const { searchMode } = Astro.props;
+
+/** @breaklocation Home & Search */
 ---
 
-{/**
-  * @break
-  * location: Home & Search
-  * wcag2SuccessCriterion: 1.4.10
-  * wcag3Requirement: Reflow
-  * description:
-  *   - When zoomed, the header text moves off the background.
-  *   - At 400% zoom, the cookie notice occupies more than the full screen and cannot be scrolled.
-  */}
+{
+  /**
+   * @break
+   * wcag2SuccessCriterion: 1.4.10
+   * wcag3Requirement: Reflow
+   * description:
+   *   - When zoomed, the header text moves off the background.
+   *   - At 400% zoom, the cookie notice occupies more than the full screen and cannot be scrolled.
+   */
+  /**
+   * @break
+   * wcag3Requirement: Maximum text contrast
+   * description: The title in the header is 21:1.
+   * discussionItems:
+   *   - Is this above the contrast maximum?
+   */
+}
 <header>
   <a class="logo" href={museumBaseUrl}
     ><Image src={logo} alt="" width="80" height="80" />
