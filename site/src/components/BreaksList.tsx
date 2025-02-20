@@ -51,8 +51,8 @@ interface BreakWcagLabelProps {
 
 const BreakWcagLabel = ({ break: { data }, version }: BreakWcagLabelProps) =>
   version === "2"
-    ? `${data.wcag2SuccessCriterion}: ${wcag2SuccessCriteria[data.wcag2SuccessCriterion!]}`
-    : data.wcag3Requirement;
+    ? `${data.wcag2SuccessCriterion}: ${wcag2SuccessCriteria[data.wcag2SuccessCriterion![0]]}`
+    : data.wcag3Requirement![0];
 
 export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
   const [{ arrangement, query, version }, setValues] = useState(
@@ -75,39 +75,66 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
     sortBy(
       breaks.filter(({ data }) => {
         if (!data[wcagProp]) return false;
-        if (query)
+        // FIXME: This currently matches across WCAG 2 SC / WCAG 3 Requirement labels
+        if (query) {
           return (
-            data.description.includes(query) ||
+            data.description.find((d) => d.includes(query)) ||
             data.location.id.includes(query) ||
             (data.wcag2SuccessCriterion &&
-              (data.wcag2SuccessCriterion?.includes(query) ||
-                wcag2SuccessCriteria[data.wcag2SuccessCriterion].includes(
-                  query
-                ))) ||
-            data.wcag3Requirement?.includes(query)
+              data.wcag2SuccessCriterion.find(
+                (c) =>
+                  c.includes(query) ||
+                  wcag2SuccessCriteria[c]
+                    .toLowerCase()
+                    .includes(query.toLowerCase())
+              )) ||
+            (data.wcag3Requirement &&
+              data.wcag3Requirement.find((r) =>
+                r.toLowerCase().includes(query.toLowerCase())
+              ))
           );
+        }
         return true;
       }),
       // FIXME: this probably won't sort section numbers correctly (e.g. 2.4.1, 2.4.11, 2.4.2)
       [sectionIteratee, dtIteratee]
-    ).reduce((breaks, nextBreak) => {
-      if (!breaks.length) return [nextBreak];
-      const previousBreak = breaks[breaks.length - 1];
+    )
+      .reduce((breaks, nextBreak) => {
+        if (!breaks.length) return [nextBreak];
+        const previousBreak = breaks[breaks.length - 1];
 
-      // Merge descriptions of neighboring breaks for same section and subsection
-      if (
-        sectionIteratee(nextBreak) === sectionIteratee(previousBreak) &&
-        dtIteratee(nextBreak) === dtIteratee(previousBreak)
-      ) {
-        previousBreak.data.description = ([] as string[]).concat(
-          previousBreak.data.description,
-          nextBreak.data.description
-        );
-      } else {
-        breaks.push(nextBreak);
-      }
-      return breaks;
-    }, [] as CollectionEntry<"breaks">[]),
+        // Merge descriptions of neighboring breaks for same section and subsection
+        if (
+          sectionIteratee(nextBreak) === sectionIteratee(previousBreak) &&
+          dtIteratee(nextBreak) === dtIteratee(previousBreak)
+        ) {
+          previousBreak.data.description = [
+            ...previousBreak.data.description,
+            ...nextBreak.data.description,
+          ];
+        } else {
+          breaks.push(nextBreak);
+        }
+        return breaks;
+      }, [] as CollectionEntry<"breaks">[])
+      .reduce((breaks, nextBreak) => {
+        // Split breaks associated with multiple SCs/requirements
+        const wcagValues = requirementIteratee(nextBreak);
+        if (Array.isArray(wcagValues) && wcagValues.length > 1) {
+          for (const value of wcagValues) {
+            breaks.push({
+              ...nextBreak,
+              data: {
+                ...nextBreak.data,
+                [wcagProp]: [value], // preserve array-of-one-or-more type, but always 1 element
+              },
+            });
+          }
+        } else {
+          breaks.push(nextBreak);
+        }
+        return breaks;
+      }, [] as CollectionEntry<"breaks">[]),
     sectionIteratee
   );
 
