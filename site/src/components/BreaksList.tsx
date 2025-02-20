@@ -32,26 +32,22 @@ interface SingleBreak
   wcag3Requirement?: string;
 }
 
-interface BreakAreaLinkProps {
+interface BreakLabelProps {
   break: SingleBreak;
   breakSectionsMap: BreakSectionsMap;
+  version: z.infer<typeof formSchema.shape.version>;
 }
 
 const BreakAreaLink = ({
   break: { location },
   breakSectionsMap,
-}: BreakAreaLinkProps) => (
+}: BreakLabelProps) => (
   <a href={museumBaseUrl + breakSectionsMap[location.id].data.path}>
     {location.id}
   </a>
 );
 
-interface BreakWcagLabelProps {
-  break: SingleBreak;
-  version: z.infer<typeof formSchema.shape.version>;
-}
-
-const BreakWcagLabel = ({ break: b, version }: BreakWcagLabelProps) =>
+const BreakWcagLabel = ({ break: b, version }: BreakLabelProps) =>
   version === "2"
     ? `${b.wcag2SuccessCriterion}: ${wcag2SuccessCriteria[b.wcag2SuccessCriterion!]}`
     : b.wcag3Requirement!;
@@ -80,6 +76,8 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
 
   const getSection = arrangement === "area" ? getLocation : getWcag;
   const getDt = arrangement === "area" ? getWcag : getLocation;
+  const SectionLabel = arrangement === "area" ? BreakAreaLink : BreakWcagLabel;
+  const DtLabel = arrangement === "area" ? BreakWcagLabel : BreakAreaLink;
 
   const groupedBreaks = groupBy(
     sortBy(
@@ -206,27 +204,16 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
         {Object.entries(groupedBreaks).map(([name, breaks]) => (
           <section key={name}>
             <h3>
-              {arrangement === "area" ? (
-                <BreakAreaLink
-                  break={breaks[0]}
-                  breakSectionsMap={breakSectionsMap}
-                />
-              ) : (
-                <BreakWcagLabel break={breaks[0]} version={version} />
-              )}
+              <SectionLabel
+                break={breaks[0]}
+                {...{ breakSectionsMap, version }}
+              />
             </h3>
             <dl>
               {breaks.map((b) => (
                 <>
                   <dt>
-                    {arrangement === "area" ? (
-                      <BreakWcagLabel break={b} version={version} />
-                    ) : (
-                      <BreakAreaLink
-                        break={b}
-                        breakSectionsMap={breakSectionsMap}
-                      />
-                    )}
+                    <DtLabel break={b} {...{ breakSectionsMap, version }} />
                   </dt>
                   {b.description.map((description) => (
                     <dd>{description}</dd>
