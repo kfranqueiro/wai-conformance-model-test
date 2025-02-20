@@ -42,6 +42,15 @@ const shouldDuplicateLink =
   <h2>{category.data.title}</h2>
   <Content />
   {
+    /**
+     * @break
+     * location: Home Collection
+     * wcag2SuccessCriterion:
+     *   - 2.3.1
+     *   - 2.3.2
+     * wcag3Requirement: Flashing and strobing
+     * description: The image thumbnails in the exhibit list on this page flash 4 times within a one-second period.
+     */
     category.data.dangerous && (
       <Modal id="warning-modal" mode="fixed">
         <div class="warning-content">

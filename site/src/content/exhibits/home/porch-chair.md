@@ -4,6 +4,10 @@ imageDescription: A wooden chair missing the left half of its back and most of t
 image: "@/assets/images/exhibits/home/dan-meyers-m4FB7fzTr80-unsplash.jpg"
 level of education: "lower secondary education"
 content note: This content was generated with a prompt to make heavy use of idioms, synonyms, and metaphors
+breaks:
+  - location: Home Collection
+    wcag3Requirement: Figurative language
+    description: The Porch Chair page makes use of idioms, synonyms, and metaphors.
 ---
 
 Welcome to the <cite>Porch Chair</cite> exhibit.
