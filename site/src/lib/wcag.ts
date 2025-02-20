@@ -86,7 +86,8 @@ export const wcag2SuccessCriteria = {
   "4.1.1": "Parsing (Obsolete and removed)",
   "4.1.2": "Name, Role, Value",
   "4.1.3": "Status Messages",
-} as const;;
+} as const;
+export type Wcag2SuccessCriterion = keyof typeof wcag2SuccessCriteria;
 
 export const wcag3Requirements = [
   "Decorative image",

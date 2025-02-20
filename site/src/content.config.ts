@@ -1,12 +1,14 @@
+import { defineCollection, reference, z } from "astro:content";
 import { parseFrontmatter } from "@astrojs/markdown-remark";
 import { file, glob } from "astro/loaders";
-import { defineCollection, reference, z } from "astro:content";
+import type { ZodType, ZodTypeDef } from "astro/zod";
 import fg from "fast-glob";
 
 import { readFile } from "fs/promises";
 import { join } from "path";
+
 import { regExpMatchGenerator } from "./lib/util";
-import { wcag2SuccessCriteria } from "./lib/wcag";
+import { wcag2SuccessCriteria, type Wcag2SuccessCriterion } from "./lib/wcag";
 
 /** Fields in common between our schemas that use Astro's image() */
 const baseImageSchema = z.object({
@@ -15,6 +17,20 @@ const baseImageSchema = z.object({
   imagePosition: z.string().optional(),
   skipAlt: z.boolean().optional(),
 });
+
+/** Returns a union of the given schema with a non-empty array containing the same type. */
+const singleOrArray = <O, D extends ZodTypeDef, I>(schema: ZodType<O, D, I>) =>
+  schema.or(z.array(schema).nonempty());
+
+/** Transforms a singleOrArray schema to always return an array for easier processing. */
+const transformToArray = <T>(value: T | [T, ...T[]]): [T, ...T[]] =>
+  Array.isArray(value) ? value : [value];
+
+/** Like transformToArray, but for use specifically with .optional() schemas. */
+const transformToOptionalArray = <T>(
+  value: T | [T, ...T[]] | undefined
+): [T, ...T[]] | undefined =>
+  typeof value === "undefined" || Array.isArray(value) ? value : [value];
 
 export const collections = {
   breakSections: defineCollection({
@@ -66,17 +82,17 @@ export const collections = {
     },
     schema: z
       .object({
-        description: z.string().or(z.array(z.string())),
+        description: singleOrArray(z.string()).transform(transformToArray),
         location: reference("breakSections"),
-        wcag2SuccessCriterion: z
-          .enum(
-            Object.keys(wcag2SuccessCriteria) as [
-              keyof typeof wcag2SuccessCriteria,
-            ]
-          )
-          .optional(),
+        wcag2SuccessCriterion: singleOrArray(
+          z.enum(Object.keys(wcag2SuccessCriteria) as [Wcag2SuccessCriterion])
+        )
+          .optional()
+          .transform(transformToOptionalArray),
         // TODO: validate against WCAG 3 requirements present in ED?
-        wcag3Requirement: z.string().optional(),
+        wcag3Requirement: singleOrArray(z.string())
+          .optional()
+          .transform(transformToOptionalArray),
       })
       .refine(
         (value) => value.wcag2SuccessCriterion || value.wcag3Requirement,
