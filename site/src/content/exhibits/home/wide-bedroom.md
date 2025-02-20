@@ -7,7 +7,7 @@ level of education: "lower secondary education"
 content note: This content was generated with a prompt to to make the language and tone be disrespectful to the owners of the property for letting the house get into a state of disrepair and to the reader for wanting to visit it. 
 breaks:
   - location: Home Collection
-    wcag3Requirement: Appropriate tone
+    wcag3: Appropriate tone
     description: The language and tone of the Wide Bedroom page is disrespectful to the past owners of the property and the reader.
 ---
 

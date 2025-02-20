@@ -88,21 +88,21 @@ export const collections = {
       .object({
         description: singleOrArray(z.string()).transform(transformToArray),
         location: reference("breakSections"),
-        wcag2SuccessCriterion: singleOrArray(
+        wcag2: singleOrArray(
           z.enum(Object.keys(wcag2SuccessCriteria) as [Wcag2SuccessCriterion])
         )
           .optional()
           .transform(transformToOptionalArray),
         // TODO: validate against WCAG 3 requirements present in ED?
-        wcag3Requirement: singleOrArray(z.string())
+        wcag3: singleOrArray(z.string())
           .optional()
           .transform(transformToOptionalArray),
       })
       .refine(
-        (value) => value.wcag2SuccessCriterion || value.wcag3Requirement,
+        (value) => value.wcag2 || value.wcag3,
         {
           message:
-            "One or both of wcag2SuccessCriterion and/or wcag3Requirement must be set.",
+            "One or both of wcag2 and/or wcag3 must be set.",
         }
       ),
   }),

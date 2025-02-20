@@ -23,13 +23,10 @@ const formSchema = z.object({
 
 /** Simpler object format that entries are reduced to during processing */
 interface SingleBreak
-  extends Omit<
-    CollectionEntry<"breaks">["data"],
-    "wcag2SuccessCriterion" | "wcag3Requirement"
-  > {
+  extends Omit<CollectionEntry<"breaks">["data"], "wcag2" | "wcag3"> {
   id: CollectionEntry<"breaks">["id"];
-  wcag2SuccessCriterion?: Wcag2SuccessCriterion;
-  wcag3Requirement?: string;
+  wcag2?: Wcag2SuccessCriterion;
+  wcag3?: string;
 }
 
 interface BreakLabelProps {
@@ -48,9 +45,7 @@ const BreakAreaLink = ({
 );
 
 const BreakWcagLabel = ({ break: b, version }: BreakLabelProps) =>
-  version === "2"
-    ? `${b.wcag2SuccessCriterion}: ${wcag2SuccessCriteria[b.wcag2SuccessCriterion!]}`
-    : b.wcag3Requirement!;
+  version === "2" ? `${b.wcag2}: ${wcag2SuccessCriteria[b.wcag2!]}` : b.wcag3!;
 
 const caseInsensitiveIncludes = (a: string, b: string) =>
   a.toLowerCase().includes(b.toLowerCase());
@@ -61,18 +56,17 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
   );
   const listRef = useRef<HTMLDivElement | null>(null);
 
-  const wcagProp =
-    version === "2" ? "wcag2SuccessCriterion" : "wcag3Requirement";
+  const wcagProp = version === "2" ? "wcag2" : "wcag3";
   const getLocation = ({ location }: SingleBreak) => location.id;
   const getWcag =
     version === "2"
-      ? ({ wcag2SuccessCriterion }: SingleBreak) =>
+      ? ({ wcag2 }: SingleBreak) =>
           // Maps e.g. 1.2.1 to 10201, 2.4.11 to 20411, for sortability
-          wcag2SuccessCriterion!
+          wcag2!
             .split(".")
             .reverse()
             .reduce((sum, n, i) => sum + +n * Math.pow(10, i * 2), 0)
-      : ({ wcag3Requirement }: SingleBreak) => wcag3Requirement!;
+      : ({ wcag3 }: SingleBreak) => wcag3!;
 
   const getSection = arrangement === "area" ? getLocation : getWcag;
   const getDt = arrangement === "area" ? getWcag : getLocation;
@@ -91,24 +85,18 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
             return true;
 
           if (version === "2")
-            return !!data.wcag2SuccessCriterion!.find(
+            return !!data.wcag2!.find(
               (c) =>
                 c.includes(query) ||
                 caseInsensitiveIncludes(wcag2SuccessCriteria[c], query)
             );
-          return !!data.wcag3Requirement!.find((r) =>
-            caseInsensitiveIncludes(r, query)
-          );
+          return !!data.wcag3!.find((r) => caseInsensitiveIncludes(r, query));
         })
         .reduce((breaks, nextBreak) => {
           // Split breaks associated with multiple SCs/requirements
           for (const value of nextBreak.data[wcagProp]!) {
             breaks.push({
-              ...omit(
-                nextBreak.data,
-                "wcag2SuccessCriterion",
-                "wcag3Requirement"
-              ),
+              ...omit(nextBreak.data, "wcag2", "wcag3"),
               id: nextBreak.id,
               [wcagProp]: value,
             });

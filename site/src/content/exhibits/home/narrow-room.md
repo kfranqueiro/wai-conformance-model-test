@@ -7,7 +7,7 @@ level of education: "lower secondary education"
 content note: This content was generated to include several French and German terms or phrases, some of which are well-known in English
 breaks:
   - location: Home Collection
-    wcag2SuccessCriterion: 3.1.2
+    wcag2: 3.1.2
     description: |
       The Narrow Room exhibit has non-English words that are not part of the vernacular marked up with an incorrect language code. It also includes non-English words that are part of the vernacular marked up as being in a foreign language.
 ---

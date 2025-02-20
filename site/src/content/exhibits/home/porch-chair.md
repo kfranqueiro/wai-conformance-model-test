@@ -6,7 +6,7 @@ level of education: "lower secondary education"
 content note: This content was generated with a prompt to make heavy use of idioms, synonyms, and metaphors
 breaks:
   - location: Home Collection
-    wcag3Requirement: Figurative language
+    wcag3: Figurative language
     description: The Porch Chair page makes use of idioms, synonyms, and metaphors.
 ---
 
