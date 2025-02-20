@@ -33,6 +33,13 @@ const carouselEntries = confirmDefinedEntries([
   await getEntry("exhibits", "technology/crt-monitor"),
   await getEntry("products", "vessels/water-bottle"),
 ]);
+
+/** @breaklocation Home & Search */
+/**
+ * @break
+ * wcag2SuccessCriterion: 2.4.9
+ * description: The Read More and Explore link text does not provide enough information to know which links go where.
+ */
 ---
 
 <Layout title="Home" withFixedSearch={false} withInsetMain={false}>
