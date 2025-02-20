@@ -1,10 +1,12 @@
 import type { CollectionEntry } from "astro:content";
 import { z } from "astro/zod";
 import groupBy from "lodash-es/groupBy";
+import omit from "lodash-es/omit";
 import sortBy from "lodash-es/sortBy";
 import { useEffect, useRef, useState, type FormEvent } from "preact/compat";
+
 import { museumBaseUrl } from "@/lib/constants";
-import { wcag2SuccessCriteria } from "@/lib/wcag";
+import { wcag2SuccessCriteria, type Wcag2SuccessCriterion } from "@/lib/wcag";
 
 type BreakSectionsMap = Record<string, CollectionEntry<"breakSections">>;
 
@@ -19,40 +21,43 @@ const formSchema = z.object({
   version: z.enum(["2", "3"]).default("2"),
 });
 
-const getStateFromUrl = () => {
-  const params = new URLSearchParams(
-    typeof location !== "undefined" ? location.search : ""
-  );
-  return formSchema.parse({
-    arrangement: params.get("a") || undefined,
-    query: params.get("q") || undefined,
-    version: params.get("v") || undefined,
-  });
-};
+/** Simpler object format that entries are reduced to during processing */
+interface SingleBreak
+  extends Omit<
+    CollectionEntry<"breaks">["data"],
+    "wcag2SuccessCriterion" | "wcag3Requirement"
+  > {
+  id: CollectionEntry<"breaks">["id"];
+  wcag2SuccessCriterion?: Wcag2SuccessCriterion;
+  wcag3Requirement?: string;
+}
 
 interface BreakAreaLinkProps {
-  break: CollectionEntry<"breaks">;
+  break: SingleBreak;
   breakSectionsMap: BreakSectionsMap;
 }
 
 const BreakAreaLink = ({
-  break: { data },
+  break: { location },
   breakSectionsMap,
 }: BreakAreaLinkProps) => (
-  <a href={museumBaseUrl + breakSectionsMap[data.location.id].data.path}>
-    {data.location.id}
+  <a href={museumBaseUrl + breakSectionsMap[location.id].data.path}>
+    {location.id}
   </a>
 );
 
 interface BreakWcagLabelProps {
-  break: CollectionEntry<"breaks">;
+  break: SingleBreak;
   version: z.infer<typeof formSchema.shape.version>;
 }
 
-const BreakWcagLabel = ({ break: { data }, version }: BreakWcagLabelProps) =>
+const BreakWcagLabel = ({ break: b, version }: BreakWcagLabelProps) =>
   version === "2"
-    ? `${data.wcag2SuccessCriterion}: ${wcag2SuccessCriteria[data.wcag2SuccessCriterion![0]]}`
-    : data.wcag3Requirement![0];
+    ? `${b.wcag2SuccessCriterion}: ${wcag2SuccessCriteria[b.wcag2SuccessCriterion!]}`
+    : b.wcag3Requirement!;
+
+const caseInsensitiveIncludes = (a: string, b: string) =>
+  a.toLowerCase().includes(b.toLowerCase());
 
 export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
   const [{ arrangement, query, version }, setValues] = useState(
@@ -62,80 +67,76 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
 
   const wcagProp =
     version === "2" ? "wcag2SuccessCriterion" : "wcag3Requirement";
-  const locationIteratee = ({ data }: CollectionEntry<"breaks">) =>
-    data.location.id;
-  const requirementIteratee = ({ data }: CollectionEntry<"breaks">) =>
-    data[wcagProp]!;
-  const sectionIteratee =
-    arrangement === "area" ? locationIteratee : requirementIteratee;
-  const dtIteratee =
-    arrangement === "area" ? requirementIteratee : locationIteratee;
+  const getLocation = ({ location }: SingleBreak) => location.id;
+  const getWcag =
+    version === "2"
+      ? ({ wcag2SuccessCriterion }: SingleBreak) =>
+          // Maps e.g. 1.2.1 to 10201, 2.4.11 to 20411, for sortability
+          wcag2SuccessCriterion!
+            .split(".")
+            .reverse()
+            .reduce((sum, n, i) => sum + +n * Math.pow(10, i * 2), 0)
+      : ({ wcag3Requirement }: SingleBreak) => wcag3Requirement!;
+
+  const getSection = arrangement === "area" ? getLocation : getWcag;
+  const getDt = arrangement === "area" ? getWcag : getLocation;
 
   const groupedBreaks = groupBy(
     sortBy(
-      breaks.filter(({ data }) => {
-        if (!data[wcagProp]) return false;
-        // FIXME: This currently matches across WCAG 2 SC / WCAG 3 Requirement labels
-        if (query) {
-          return (
-            data.description.find((d) => d.includes(query)) ||
-            data.location.id.includes(query) ||
-            (data.wcag2SuccessCriterion &&
-              data.wcag2SuccessCriterion.find(
-                (c) =>
-                  c.includes(query) ||
-                  wcag2SuccessCriteria[c]
-                    .toLowerCase()
-                    .includes(query.toLowerCase())
-              )) ||
-            (data.wcag3Requirement &&
-              data.wcag3Requirement.find((r) =>
-                r.toLowerCase().includes(query.toLowerCase())
-              ))
-          );
-        }
-        return true;
-      }),
-      // FIXME: this probably won't sort section numbers correctly (e.g. 2.4.1, 2.4.11, 2.4.2)
-      [sectionIteratee, dtIteratee]
-    )
-      .reduce((breaks, nextBreak) => {
-        if (!breaks.length) return [nextBreak];
-        const previousBreak = breaks[breaks.length - 1];
+      breaks
+        .filter(({ data }) => {
+          if (!data[wcagProp]) return false;
+          if (!query) return true;
 
-        // Merge descriptions of neighboring breaks for same section and subsection
-        if (
-          sectionIteratee(nextBreak) === sectionIteratee(previousBreak) &&
-          dtIteratee(nextBreak) === dtIteratee(previousBreak)
-        ) {
-          previousBreak.data.description = [
-            ...previousBreak.data.description,
-            ...nextBreak.data.description,
-          ];
-        } else {
-          breaks.push(nextBreak);
-        }
-        return breaks;
-      }, [] as CollectionEntry<"breaks">[])
-      .reduce((breaks, nextBreak) => {
-        // Split breaks associated with multiple SCs/requirements
-        const wcagValues = requirementIteratee(nextBreak);
-        if (Array.isArray(wcagValues) && wcagValues.length > 1) {
-          for (const value of wcagValues) {
+          if (caseInsensitiveIncludes(data.location.id, query)) return true;
+          if (data.description.find((d) => caseInsensitiveIncludes(d, query)))
+            return true;
+
+          if (version === "2")
+            return !!data.wcag2SuccessCriterion!.find(
+              (c) =>
+                c.includes(query) ||
+                caseInsensitiveIncludes(wcag2SuccessCriteria[c], query)
+            );
+          return !!data.wcag3Requirement!.find((r) =>
+            caseInsensitiveIncludes(r, query)
+          );
+        })
+        .reduce((breaks, nextBreak) => {
+          // Split breaks associated with multiple SCs/requirements
+          for (const value of nextBreak.data[wcagProp]!) {
             breaks.push({
-              ...nextBreak,
-              data: {
-                ...nextBreak.data,
-                [wcagProp]: [value], // preserve array-of-one-or-more type, but always 1 element
-              },
+              ...omit(
+                nextBreak.data,
+                "wcag2SuccessCriterion",
+                "wcag3Requirement"
+              ),
+              id: nextBreak.id,
+              [wcagProp]: value,
             });
           }
-        } else {
-          breaks.push(nextBreak);
-        }
-        return breaks;
-      }, [] as CollectionEntry<"breaks">[]),
-    sectionIteratee
+          return breaks;
+        }, [] as SingleBreak[]),
+      [getSection, getDt]
+    ).reduce((breaks, nextBreak) => {
+      if (!breaks.length) return [nextBreak];
+      const previousBreak = breaks[breaks.length - 1];
+
+      // Merge descriptions of neighboring breaks for same section and subsection
+      if (
+        getSection(nextBreak) === getSection(previousBreak) &&
+        getDt(nextBreak) === getDt(previousBreak)
+      ) {
+        previousBreak.description = [
+          ...previousBreak.description,
+          ...nextBreak.description,
+        ];
+      } else {
+        breaks.push(nextBreak);
+      }
+      return breaks;
+    }, [] as SingleBreak[]),
+    getSection
   );
 
   const onSubmit = (event: FormEvent) => {
@@ -157,7 +158,16 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
   };
 
   useEffect(() => {
-    const updateValues = () => setValues(getStateFromUrl());
+    const params = new URLSearchParams(location.search);
+    const updateValues = () => {
+      setValues(
+        formSchema.parse({
+          arrangement: params.get("a") || undefined,
+          query: params.get("q") || undefined,
+          version: params.get("v") || undefined,
+        })
+      );
+    };
 
     // Intentionally recall value after first render, to avoid skew from initial server response
     if (location.search) updateValues();
@@ -188,7 +198,7 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
           <input id="query" name="q" defaultValue={query} />
         </div>
         <div>
-          <button>Refresh</button>
+          <button>Apply</button>
         </div>
       </form>
 
@@ -218,7 +228,7 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
                       />
                     )}
                   </dt>
-                  {[b.data.description].flat().map((description) => (
+                  {b.description.map((description) => (
                     <dd>{description}</dd>
                   ))}
                 </>
