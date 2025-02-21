@@ -16,7 +16,7 @@ interface BreaksListProps {
 }
 
 const formSchema = z.object({
-  arrangement: z.enum(["failure", "area"]).default("failure"),
+  arrangement: z.enum(["area", "failure"]).default("area"),
   query: z.string().default(""),
   version: z.enum(["2", "3"]).default("2"),
 });
@@ -188,8 +188,8 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
         <div>
           <label for="arrangement">Arrange by:</label>
           <select id="arrangement" name="a" defaultValue={arrangement}>
-            <option value="failure">Failure</option>
             <option value="area">Site area</option>
+            <option value="failure">Failure</option>
           </select>
         </div>
         <div>
