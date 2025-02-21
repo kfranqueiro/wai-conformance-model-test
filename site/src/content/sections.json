@@ -24,7 +24,6 @@
   {
     "id": "Home Collection",
     "path": "collections/home/",
-    "photosensitivity": true,
     "description": "This section demonstrates content that has few accessibility failures, BUT the failures that exist could cause individuals with disabilities physical or psychological harm."
   },
   {

@@ -44,8 +44,21 @@ const BreakAreaLink = ({
   </a>
 );
 
-const BreakWcagLabel = ({ break: b, version }: BreakLabelProps) =>
-  version === "2" ? `${b.wcag2}: ${wcag2SuccessCriteria[b.wcag2!]}` : b.wcag3!;
+const BreakWcagLabel = ({
+  break: { photosensitivity, wcag2, wcag3 },
+  version,
+}: BreakLabelProps) => {
+  const label =
+    version === "2" ? `${wcag2}: ${wcag2SuccessCriteria[wcag2!]}` : wcag3!;
+  return (
+    <>
+      {label}{" "}
+      {photosensitivity && (
+        <strong class="photosensitivity">(Photosensitivity warning)</strong>
+      )}
+    </>
+  );
+};
 
 const caseInsensitiveIncludes = (a: string, b: string) =>
   a.toLowerCase().includes(b.toLowerCase());
@@ -197,6 +210,12 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
                 {...{ breakSectionsMap, version }}
               />
             </h3>
+            {arrangement === "area" &&
+              breakSectionsMap[breaks[0].location.id].data.description && (
+                <p>
+                  {breakSectionsMap[breaks[0].location.id].data.description}
+                </p>
+              )}
             <dl>
               {breaks.map((b) => (
                 <>
@@ -204,7 +223,23 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
                     <DtLabel break={b} {...{ breakSectionsMap, version }} />
                   </dt>
                   {b.description.map((description) => (
-                    <dd>{description}</dd>
+                    <dd>
+                      {description}
+                      {b.discussionItems && (
+                        <>
+                          <div>
+                            <strong class="discussion-item">
+                              Discussion items:
+                            </strong>
+                          </div>
+                          <ul>
+                            {b.discussionItems.map((item) => (
+                              <li>{item}</li>
+                            ))}
+                          </ul>
+                        </>
+                      )}
+                    </dd>
                   ))}
                 </>
               ))}

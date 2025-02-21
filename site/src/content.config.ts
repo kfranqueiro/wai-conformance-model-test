@@ -37,11 +37,11 @@ export const collections = {
     loader: file("src/content/sections.json"),
     schema: z.object({
       description: z.string().optional(),
-      discussionItems: z.array(z.string()).optional(),
       id: z.string(),
       // Allow empty path for Home but otherwise require trailing slash
-      path: z.string().regex(/^$|\/$/),
-      photosensitivity: z.boolean().optional(),
+      path: z
+        .string()
+        .regex(/^$|\/$/, "Non-empty path should end with a slash"),
     }),
   }),
   breaks: defineCollection({
@@ -53,7 +53,9 @@ export const collections = {
       for (const path of paths) {
         const content = await readFile(join("src", path), "utf8");
         if (path.endsWith(".astro")) {
-          const locationMatch = /\/\*[\s\*]*@breaklocation([\s\S]*?)\*\//.exec(content);
+          const locationMatch = /\/\*[\s\*]*@breaklocation([\s\S]*?)\*\//.exec(
+            content
+          );
           const location = locationMatch?.[1].trim() || undefined;
           // Support /** @break ... */ blocks in astro templates
           for (const match of regExpMatchGenerator(
@@ -87,7 +89,9 @@ export const collections = {
     schema: z
       .object({
         description: singleOrArray(z.string()).transform(transformToArray),
+        discussionItems: z.array(z.string()).optional(),
         location: reference("breakSections"),
+        photosensitivity: z.boolean().optional(),
         wcag2: singleOrArray(
           z.enum(Object.keys(wcag2SuccessCriteria) as [Wcag2SuccessCriterion])
         )
@@ -98,13 +102,9 @@ export const collections = {
           .optional()
           .transform(transformToOptionalArray),
       })
-      .refine(
-        (value) => value.wcag2 || value.wcag3,
-        {
-          message:
-            "One or both of wcag2 and/or wcag3 must be set.",
-        }
-      ),
+      .refine((value) => value.wcag2 || value.wcag3, {
+        message: "One or both of wcag2 and/or wcag3 must be set.",
+      }),
   }),
 
   blog: defineCollection({
