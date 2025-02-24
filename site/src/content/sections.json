@@ -45,18 +45,12 @@
     "description": "This section demonstrates issues with focus management, accessible names, incompletely implement controls for user interface components with ARIA roles, reading order, and Windows high-contrast mode.",
     "discussionItems": [
       "Is misusing CSS forced colors something that WCAG 3 needs to address?",
-      "Do WCAG 3's Adjust Color and/or AT Control have the same coverage as Section 508's and EN 301 549's User Preference requirement?",
-      "Should sticky content (e.g., headers and footers) take up a maximum amount of space when a user agent is zoomed in?",
-      "Should text in cards, where the entire card is clickable, be selectable? Is this an accessibility issue or general UX?"
+      "Do WCAG 3's Adjust Color and/or AT Control have the same coverage as Section 508's and EN 301 549's User Preference requirement?"
     ]
   },
   {
     "id": "About",
-    "path": "about/",
-    "discussionItems": [
-      "Is the hard-to-read text that's used in the mission statement and table headers just bad usability or an accessibility issue?",
-      "Is using the ARIA grid role on a table of static content an issue?"
-    ]
+    "path": "about/"
   },
   {
     "id": "Blog",
