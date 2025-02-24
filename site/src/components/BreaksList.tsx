@@ -177,7 +177,7 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
         </div>
         <div>
           <label for="query">Filter:</label>
-          <input id="query" name="q" defaultValue={query} />
+          <input id="query" name="q" defaultValue={query} placeholder="e.g. focus, 1.4.10, link, ..." />
         </div>
         <div>
           <button>Apply</button>
