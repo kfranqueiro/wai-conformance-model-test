@@ -6,14 +6,63 @@ import spectrum from "@/assets/images/exhibits/early-home-computers/spectrum.web
 import beebpc from "@/assets/images/exhibits/early-home-computers/bbc-micro.webp";
 import c64 from "@/assets/images/exhibits/early-home-computers/c64.webp";
 import vic20 from "@/assets/images/exhibits/early-home-computers/vic20.webp";
+
+/** @breaklocation Early Home Computers Event */
+/**
+ * @break
+ * wcag3: Maximum text contrast
+ * description: Body text is white against a pure-black background.
+ */
+/**
+ * @break
+ * wcag2: 2.4.7
+ * wcag3: Custom indicator
+ * description: |
+ *   Focus indicators are made with box-shadow, which isn't supported in
+ *   Windows High-Contrast / Contrast Themes mode,
+ *   so there are no focus indicators for users who use that feature.
+ */
 ---
 
 <Layout title="Special PC event">
+  {
+    /**
+     * @break
+     * wcag2: 1.4.4
+     * wcag3: Font size meaning
+     * description: |
+     *   At 200% browser zoom, the page's h1 element doesn't double in size.
+     * discussionItems:
+     *   - Should sticky content (e.g., headers and footers) take up a maximum amount of space
+     *     when a user agent is zoomed in?
+     */
+    /**
+     * @break
+     * wcag2: 2.4.10
+     * wcag3: Section labels
+     * description: Headings jump from h1 to h4.
+     */
+  }
   <header>
     <h1>Early Home Computers Event!</h1>
   </header>
 
   <div class="about-the-event" role="region">
+    {
+      /**
+       * @break
+       * wcag2: 1.3.1
+       * wcag3: Clear relationships
+       * description: The level-2 heading is a p element styled to look like a heading.
+       */
+      /**
+       * @break
+       * wcag2: 1.3.2
+       * description: |
+       *   The "About The Event" section and "ZX81" card display more content
+       *   before the toggle controls, but don't manage the user's focus.
+       */
+    }
     <p class="h2">About The Event</p>
     <div class="initial">
       <p>
@@ -49,6 +98,41 @@ import vic20 from "@/assets/images/exhibits/early-home-computers/vic20.webp";
     </div>
   </div>
 
+  {
+    /**
+     * @break
+     * wcag2: 1.4.8
+     * description: The text in the cards is justified.
+     */
+    /**
+     * @break
+     * wcag2: 1.4.11
+     * wcag3: Control contrast
+     * description:
+     *   - The links in the small text in the cards are the same color as non-link text
+     *     and have underlines that have a contrast of less than 3:1 with the page background.
+     *   - Scrollbar color contrast is less than 3:1 in browsers that support styling scrollbars.
+     * discussionItems:
+     *   - Does this fail WCAG 3 Control contrast? If not, what requirement does it fail?
+     */
+    /**
+     * @break
+     * wcag2: 2.4.7
+     * wcag3: Custom indicator
+     * description: |
+     *   The ZX Spectrum, BBC, and VIC-20 cards don't show a focus indicator
+     *   when the focus moves to the revealed content.
+     * discussionItems:
+     *   - Is there a suitable focus-related WCAG 3 Requirement this would fail?
+     */
+    /**
+     * @break
+     * wcag3: Consistent interaction
+     * description: |
+     *   The Read More / Less controls are links marked up with role="button",
+     *   but no JavaScript has been added to make the spacebar activate them.
+     */
+  }
   <div class="devices">
     <div class="device">
       <img src={zx81.src} alt="Sinclair ZX Spectrum" />
@@ -62,6 +146,16 @@ import vic20 from "@/assets/images/exhibits/early-home-computers/vic20.webp";
           computing for the general public.
         </p>
       </div>
+      {
+        /**
+         * @break
+         * wcag2: 4.1.2
+         * wcag3: Name, role, value, state
+         * description: |
+         *   The ZX Spectrum additional content is in a focusable element with a
+         *   role="group" attribute, but has no accessible name.
+         */
+      }
       <div class="more" hidden>
         <p>
           The unexpanded ZX81's tiny memory presents a major challenge to
@@ -126,6 +220,17 @@ import vic20 from "@/assets/images/exhibits/early-home-computers/vic20.webp";
     </div>
 
     <div class="device">
+      {
+        /**
+         * @break
+         * wcag2: 1.1.1
+         * wcag3: Equivalent text alternative
+         * description: |
+         *   The alternative text for the BBC Microcomputer image,
+         *   "Wikipedia photo of a computer",
+         *   doesn't specify what kind of computer it is.
+         */
+      }
       <img src={beebpc.src} alt="Wikipedia photo of a computer" />
       <div class="initial">
         <h4>BBC Microcomputer</h4>
@@ -186,6 +291,38 @@ import vic20 from "@/assets/images/exhibits/early-home-computers/vic20.webp";
       <a class="read-more-link-button" href="#" role="button">Read More</a>
     </div>
 
+    {
+      /**
+       * @break
+       * wcag2: 2.4.7
+       * wcag3: Custom indicator
+       * description: |
+       *   The Commodore 64 card shows a focus indicator for the whole card,
+       *   even when only a specific child element is focused.
+       */
+      /**
+       * @break
+       * wcag3:
+       *   - Consistent interaction
+       *   - Custom indicator
+       * description: |
+       *   The Commodore 64 card is clickable across its entire area (not just "Read more").
+       * discussionItems:
+       *   - Is there a suitable focus-related WCAG 3 Requirement this would fail?
+       *   - Should text in cards be selectable when the entire card is clickable?
+       *     Is this an accessibility issue or general UX?
+       *   - This card blocks interactions with child elements (e.g. links).
+       *     What SC or requirement does this fail?
+       */
+      /** 
+       * @break
+       * wcag3: Change focus with pointer device
+       * description: |
+       *   Because the entire card's area is associated with the Read more link,
+       *   other interactable children (e.g. the link in the expanded card's citation)
+       *   cannot be interacted with or focused via pointer device.
+       */
+    }
     <div class="device full-cover">
       <img src={c64.src} alt="Commodore 64." />
       <div class="initial">
