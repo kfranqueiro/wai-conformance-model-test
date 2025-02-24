@@ -37,6 +37,7 @@ export const collections = {
     loader: file("src/content/sections.json"),
     schema: z.object({
       description: z.string().optional(),
+      discussionItems: z.array(z.string()).optional(),
       id: z.string(),
       // Allow empty path for Home but otherwise require trailing slash
       path: z

@@ -212,9 +212,22 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
             </h3>
             {arrangement === "area" &&
               breakSectionsMap[breaks[0].location.id].data.description && (
-                <p>
-                  {breakSectionsMap[breaks[0].location.id].data.description}
-                </p>
+                <>
+                  <p>
+                    {breakSectionsMap[breaks[0].location.id].data.description}
+                  </p>
+                  {breakSectionsMap[breaks[0].location.id].data
+                    .discussionItems && (
+                    <>
+                      <p><strong>Discussion items for this section:</strong></p>
+                      <ul>
+                        {breakSectionsMap[
+                          breaks[0].location.id
+                        ].data.discussionItems?.map((item) => <li>{item}</li>)}
+                      </ul>
+                    </>
+                  )}
+                </>
               )}
             <dl>
               {breaks.map((b) => (
