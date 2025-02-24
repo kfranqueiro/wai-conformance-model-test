@@ -106,7 +106,7 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
           return !!data.wcag3!.find((r) => caseInsensitiveIncludes(r, query));
         })
         .reduce((breaks, nextBreak) => {
-          // Split breaks associated with multiple SCs/requirements
+          // Split breaks associated with multiple SCs/requirements, to be listed separately
           for (const value of nextBreak.data[wcagProp]!) {
             breaks.push({
               ...omit(nextBreak.data, "wcag2", "wcag3"),
@@ -117,24 +117,7 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
           return breaks;
         }, [] as SingleBreak[]),
       [getSection, getDt]
-    ).reduce((breaks, nextBreak) => {
-      if (!breaks.length) return [nextBreak];
-      const previousBreak = breaks[breaks.length - 1];
-
-      // Merge descriptions of neighboring breaks for same section and subsection
-      if (
-        getSection(nextBreak) === getSection(previousBreak) &&
-        getDt(nextBreak) === getDt(previousBreak)
-      ) {
-        previousBreak.description = [
-          ...previousBreak.description,
-          ...nextBreak.description,
-        ];
-      } else {
-        breaks.push(nextBreak);
-      }
-      return breaks;
-    }, [] as SingleBreak[]),
+    ),
     getSection
   );
 
@@ -219,7 +202,9 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
                   {breakSectionsMap[breaks[0].location.id].data
                     .discussionItems && (
                     <>
-                      <p><strong>Discussion items for this section:</strong></p>
+                      <p>
+                        <strong>Discussion items for this section:</strong>
+                      </p>
                       <ul>
                         {breakSectionsMap[
                           breaks[0].location.id
@@ -230,28 +215,38 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
                 </>
               )}
             <dl>
-              {breaks.map((b) => (
+              {breaks.map((b, i) => (
                 <>
-                  <dt>
-                    <DtLabel break={b} {...{ breakSectionsMap, version }} />
-                  </dt>
+                  {(i < 1 || getDt(breaks[i - 1]) !== getDt(b)) && (
+                    <dt>
+                      <DtLabel break={b} {...{ breakSectionsMap, version }} />
+                    </dt>
+                  )}
                   {b.description.map((description) => (
                     <dd>
                       {description}
-                      {b.discussionItems && (
-                        <>
+                      {b.discussionItems &&
+                        (b.discussionItems.length === 1 ? (
                           <div>
                             <strong class="discussion-item">
-                              Discussion items:
-                            </strong>
+                              Discussion item:
+                            </strong>{" "}
+                            {b.discussionItems[0]}
                           </div>
-                          <ul>
-                            {b.discussionItems.map((item) => (
-                              <li>{item}</li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
+                        ) : (
+                          <>
+                            <div>
+                              <strong class="discussion-item">
+                                Discussion items:
+                              </strong>
+                            </div>
+                            <ul>
+                              {b.discussionItems.map((item) => (
+                                <li>{item}</li>
+                              ))}
+                            </ul>
+                          </>
+                        ))}
                     </dd>
                   ))}
                 </>
