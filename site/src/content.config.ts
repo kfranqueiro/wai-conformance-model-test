@@ -45,48 +45,87 @@ export const collections = {
         .regex(/^$|\/$/, "Non-empty path should end with a slash"),
     }),
   }),
+
   breaks: defineCollection({
-    loader: async () => {
-      const paths = await fg(["**/*.astro", "content/**/[^_]*.md"], {
-        cwd: "src",
-      });
-      const breaks: any[] = []; // Type will be validated later by schema
-      for (const path of paths) {
-        const content = await readFile(join("src", path), "utf8");
-        if (path.endsWith(".astro")) {
-          const locationMatch = /\/\*[\s\*]*@breaklocation([\s\S]*?)\*\//.exec(
-            content
-          );
-          const location = locationMatch?.[1].trim() || undefined;
-          // Support /** @break ... */ blocks in astro templates
-          for (const match of regExpMatchGenerator(
-            /\/\*[\s\*]*@break\b([\s\S]*?)\*\//g,
-            content
-          )) {
-            const id = `${path}-${match.index}`;
-            // Remove leading '* ' from multiline comment blocks
-            const yaml = match[1].replace(/^\s+\* /gm, "");
-            const { frontmatter } = parseFrontmatter(`---\n${yaml}\n---`);
-            breaks.push({
-              location,
-              ...frontmatter,
-              id,
-            });
-          }
-        } else {
-          // Support breaks property in markdown frontmatter
-          const { frontmatter } = parseFrontmatter(content);
-          ((frontmatter.breaks || []) as any[]).forEach((brk, i) => {
-            breaks.push({
-              location: frontmatter.breaklocation,
-              ...brk,
-              id: `${path}-${i}`,
-            });
+    loader: {
+      name: "break-loader",
+      load: async ({ generateDigest, parseData, store, watcher }) => {
+        async function scan() {
+          const paths = await fg(["**/*.astro", "content/**/[^_]*.md"], {
+            cwd: "src",
           });
+          store.clear();
+
+          for (const path of paths) {
+            const content = await readFile(join("src", path), "utf8");
+            if (path.endsWith(".astro")) {
+              // Support /** @break ... */ blocks in astro templates
+              const locationMatch =
+                /\/\*[\s\*]*@breaklocation([\s\S]*?)\*\//.exec(content);
+              const location = locationMatch?.[1].trim() || undefined;
+
+              for (const match of regExpMatchGenerator(
+                /\/\*[\s\*]*@break\b([\s\S]*?)\*\//g,
+                content
+              )) {
+                const id = `${path}-${match.index}`;
+                // Remove leading '* ' from multiline comment blocks
+                const yaml = match[1].replace(/^\s+\* /gm, "");
+                const { frontmatter } = parseFrontmatter(`---\n${yaml}\n---`);
+                const data = await parseData({
+                  id,
+                  data: {
+                    location,
+                    ...frontmatter,
+                  },
+                });
+                store.set({
+                  id,
+                  data,
+                  digest: generateDigest(JSON.stringify(frontmatter)),
+                  filePath: path,
+                });
+              }
+            } else {
+              // Support breaks property in markdown frontmatter
+              const { frontmatter } = parseFrontmatter(content);
+              if (!frontmatter.breaks) continue;
+              for (let i = 0; i < frontmatter.breaks.length; i++) {
+                const id = `${path}-${i}`;
+                const data = await parseData({
+                  id,
+                  data: {
+                    location: frontmatter.breaklocation,
+                    ...frontmatter.breaks[i],
+                  },
+                });
+                store.set({
+                  id,
+                  data,
+                  digest: generateDigest(JSON.stringify(frontmatter.breaks[i])),
+                  filePath: path,
+                });
+              }
+            }
+          }
         }
-      }
-      return breaks;
+        scan();
+
+        if (!watcher) return;
+
+        // Set up a future scan on file changes (debounced in case of multiple consecutive)
+        let scanTimeout: ReturnType<typeof setTimeout> | null = null;
+        const scheduleScan = () => {
+          if (scanTimeout) clearTimeout(scanTimeout);
+          scanTimeout = setTimeout(scan, 250);
+        };
+        watcher.on("change", scheduleScan);
+        watcher.on("add", scheduleScan);
+        watcher.on("unlink", scheduleScan);
+      },
     },
+    // Note: This schema needs to be defined at user level, not loader level,
+    // in order for typings for references and transforms to work
     schema: z
       .object({
         description: singleOrArray(z.string()).transform(transformToArray),
