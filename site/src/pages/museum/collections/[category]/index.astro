@@ -32,13 +32,60 @@ export async function getStaticPaths() {
 const { category, exhibits } = Astro.props;
 const { Content } = await render(category);
 
+/**
+ * @break
+ * location: Music Collection
+ * wcag2:
+ *   - 2.4.4
+ *   - 2.4.9
+ * description: |
+ *   The purpose of each entry's link is unclear because its image (with alt text)
+ *   is also included within the link, preceding its title.
+ */
+/**
+ * @break
+ * location: Music Collection
+ * wcag3:
+ *   - Control information
+ *   - Verbosity
+ * description: |
+ *   The link for each entry is overly verbose, due to the inclusion of
+ *   each entry's image (with alt text).
+ */
 const shouldWrapImageInLink =
   getMode() === "broken" && category.id === "music";
+/**
+ * @break
+ * location: Sports Collection
+ * wcag2: 1.1.1
+ * wcag3: Image alternatives
+ * description: |
+ *   The alt text on each entry's image repeats the entry's title,
+ *   rather than describing the image.
+ */
+/**
+ * @break
+ * location: Sports Collection
+ * wcag3: Relevant focus
+ * description: |
+ *   Each collection's image and title are independently linked,
+ *   requiring focus to be advanced twice to reach the next unique link.
+ */
 const shouldDuplicateLink =
   getMode() === "broken" && category.id === "sports";
 ---
 
 <Layout title={category.data.title}>
+  {
+    // TODO: this is currently broken in all collections
+    /**
+     * @break
+     * location: Technology Collection
+     * wcag2: 2.4.10
+     * wcag3: Section labels
+     * description: The page doesn't have an H1.
+     */
+  }
   <h2>{category.data.title}</h2>
   <Content />
   {
@@ -99,6 +146,15 @@ const shouldDuplicateLink =
             href={`../${id}/`}
           >
             <div class="image-container">
+              {
+                /**
+                 * @break
+                 * location: Sports Collection
+                 * wcag2: 2.4.7
+                 * wcag3: Keyboard focus appearance
+                 * description: There is no visible focus outline when a collection's image is focused.
+                 */
+              }
               <ConditionalParent
                 as="a"
                 if={shouldDuplicateLink}

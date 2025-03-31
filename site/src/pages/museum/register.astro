@@ -2,6 +2,8 @@
 import Fixable from "@/components/Fixable.astro";
 import FormLayout from "@/components/FormLayout.astro";
 import Layout from "@/layouts/Layout.astro";
+
+/** @breaklocation Register & Sign In */
 ---
 
 <Layout title="Create Account">
@@ -32,7 +34,49 @@ import Layout from "@/layouts/Layout.astro";
       <input name="password-confirm" type="password" />
     </label>
     <h2>Prove You're a Human</h2>
+    {
+      /**
+       * @break
+       * wcag2: 1.1.1
+       * wcag3: Image alternatives
+       * description: A CAPTCHA is required and no alternative is provided.
+       */
+      /**
+       * @break
+       * wcag2:
+       *   - 3.3.8
+       *   - 3.3.9
+       * wcag3: No cognitive tests
+       * description: A cognitive test is present on the Register page.
+       */
+    }
     <canvas id="captcha" width="360" height="80"></canvas>
+    {
+      /**
+       * @break
+       * wcag2: 1.4.1
+       * description: |
+       *   The focused state of the CAPTCHA field only affects its existing border,
+       *   and does not have sufficient contrast against the unfocused state.
+       */
+      /**
+       * @break
+       * wcag2: 2.4.13
+       * wcag3: Keyboard focus appearance
+       * description: |
+       *   The focused state of the CAPTCHA field only affects a 1px-thick border,
+       *   and does not have sufficient contrast against the unfocused state.
+       */
+      /**
+       * @break
+       * wcag3: Control contrast
+       * description:
+       *   - The CAPTCHA field has an invisible text cursor/caret.
+       *   - |
+       *     The CAPTCHA field is initially empty and indicated only by a
+       *     low-contrast underline, making its target area ambiguous.
+       */
+    }
     <label
       >Enter the letters shown above:
       <input name="captcha" class="captcha" />
