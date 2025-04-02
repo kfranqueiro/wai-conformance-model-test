@@ -17,6 +17,8 @@ const categories = sortBy(
   ),
   ({ name }) => name
 );
+
+/** @breaklocation Gift Shop */
 ---
 
 <ShopLayout title="Gift Shop">
@@ -25,6 +27,16 @@ const categories = sortBy(
   <div>
     <ul class="grid-wrapper">
       {
+        /**
+         * @break
+         * wcag2:
+         *   - 1.4.3
+         *   - 1.4.6
+         * wcag3: Minimum text contrast
+         * description: |
+         *   On the category listing page,
+             text is superimposed over images with no overlay to guarantee minimum contrast.
+         */
         categories.map(({ image, imagePosition, name, id }) => (
           <li
             style={{

@@ -2,10 +2,43 @@
 import CartInventory from "@/components/cart/CartInventory.astro";
 import CartStatus from "@/components/cart/CartStatus.astro";
 import ShopLayout from "@/layouts/ShopLayout.astro";
+
+/** @breaklocation Gift Shop */
 ---
 
 <ShopLayout title="Checkout">
   <h1>Checkout</h1>
+  {
+    /**
+     * @break
+     * wcag2: 3.3.5
+     * wcag3: Contextual help
+     * description: No contextual help is available during the checkout process.
+     */
+    /**
+     * @break
+     * wcag3: Inform at start
+     * description: |
+     *   Nothing is disclosed up-front about the information that will be required to complete checkout.
+     */
+    /**
+     * @break
+     * wcag3: Multi-step process
+     * description: No context is given with regard to progress through the checkout process.
+     */
+    /**
+     * @break
+     * wcag3: Numbered steps
+     * description: Checkout steps are not numbered.
+     */
+    /**
+     * @break
+     * wcag3: Go back in process
+     * description: |
+     *   No mechanism exists within checkout pages to step back through the process,
+     *   or to indicate position within the process.
+     */
+  }
   <CartInventory includeRemove />
   <CartStatus />
   <a id="continue" class="button" href="shipping/" hidden>Continue</a>

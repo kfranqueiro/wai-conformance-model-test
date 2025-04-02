@@ -62,12 +62,15 @@
   {
     "id": "Blog",
     "path": "blog/",
-    "description": "This section includes the Blog page and related article subpages."
+    "description": "This section includes the Blog page and related article subpages, demonstrating a moderate level of content, interaction and multimedia failures.",
+    "discussionItems": [
+      "In the post titled 'Announcing the Addition of a New Wing', there is a pull quote from the subsequent paragraph, which appears two sentences later in the article. Should the pull quote be hidden from screen readers?"
+    ]
   },
   {
     "id": "Gift Shop",
     "path": "gift-shop/",
-    "description": "This section includes the Gift shop, product subpages and checkout process."
+    "description": "This section includes the Gift shop, product subpages and checkout process, demonstrating task completion and form-based failures. Note that at least one item must be in the cart to continue the checkout process."
   },
   {
     "id": "Help",
@@ -89,6 +92,7 @@
   },
   {
     "id": "Volunteer",
-    "path": "volunteer/"
+    "path": "volunteer/",
+    "description": "This section includes the volunteer sign up process pages, including a small number of task completion and form-based failures."
   }
 ]

@@ -191,7 +191,7 @@ export const wcag3Requirements = [
   "Information about options",
   "Related information",
   "Current location",
-  "Multistep process",
+  "Multi-step process",
   "Contextual information",
   "Section labels",
   "Section length",

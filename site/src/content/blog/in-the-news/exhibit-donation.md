@@ -5,6 +5,12 @@ category: In the News
 brokenUrl: true
 image: "@/assets/images/blog/dall-e-broken-music-exhibit.webp"
 imageDescription: Coins with a golden hue lie on a broken surface.
+breaklocation: Blog
+breaks:
+  - wcag2: 3.1.1
+    wcag3: Error identification
+    description: |
+      The first post under "In the News" leads to a 404 page with no clear description of what went wrong.
 ---
 
 The <i>Museum of Broken Things</i> is expanding its unique collection in a musical direction with the donation of an exciting new exhibit. This special collection, dedicated entirely to albums and songs featuring the word “broken,” has been generously gifted to the museum by an anonymous donor. The exhibit will highlight how the concept of “brokenness” has resonated with artists across genres and generations, turning personal struggles, societal fractures, and emotional pain into powerful music. Visitors will now not only be able to see objects in disrepair but also listen to the sounds of brokenness through this curated musical experience.
