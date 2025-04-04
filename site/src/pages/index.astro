@@ -69,66 +69,6 @@ const breakSectionsMap = (await getCollection("breakSections")).reduce(
     }
 
     <BreaksList client:load breaks={breaks} breakSectionsMap={breakSectionsMap} />
-
-    <hr />
-    (Existing stuff beyond here, to be replaced)
-
-    <MetaFailureSection href="museum/volunteer/" title="Volunteer">
-      <p>This section includes the volunteer sign up process pages.</p>
-
-      <p>This section includes task completion and form based failures. This includes a small number of errors.</p>
-
-      <dl slot="wcag2">
-        <dt>1.4.3 and 1.4.6: Contrast</dt>
-        <dd>
-          The "did you mean" email prompt has insufficient contrast.
-        </dd>
-        <dt>2.2.3: No Timing</dt>
-        <dd>
-          The volunteer form becomes unsubmittable after a short time,
-          and the toast informing of this change disappears after a few seconds.
-        </dd>
-        <dt>2.2.6: Timeouts</dt>
-        <dd>
-          The form becomes unsubmittable after a short time period which is not disclosed in advance.
-        </dd>
-        <dt>4.1.3: Status Messages</dt>
-        <dd>
-          When the form becomes disabled, the toast that appears
-          does not grab focus and is not announced.
-        </dd>
-        <dd>
-          The "did you mean" email prompt doesn't grab focus and isn't announced.
-        </dd>
-      </dl>
-
-      <dl slot="wcag3">
-        <dt>Minimum text contrast</dt>
-        <dd>
-          The "did you mean" email prompt has insufficient contrast.
-        </dd>
-        <dt>Error identification</dt>
-        <dd>
-          The "did you mean" email prompt isn't programmatically associated with the error source.
-        </dd>
-        <dt>Persistent error notification</dt>
-        <dd>
-          The timeout notification toast dismisses itself automatically
-          without waiting for the user.
-        </dd>
-        <dt>Adequate time</dt>
-        <dd>
-          There is a timeout that may be too short to enter required information,
-          which the user is not notified about.
-          The toast that appears when the timeout lapses disappears after a few seconds.
-        </dd>
-        <dt>Notification of change</dt>
-        <dd>
-          When the form becomes disabled, the toast that appears
-          does not grab focus and is not announced.
-        </dd>
-      </dl>
-    </MetaFailureSection>
   </section>
 
   <section id="acknowledgment">

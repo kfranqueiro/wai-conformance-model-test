@@ -93,6 +93,6 @@
   {
     "id": "Volunteer",
     "path": "volunteer/",
-    "description": "This section includes the volunteer sign up process pages, including a small number of task completion and form-based failures."
+    "description": "This section includes the volunteer sign up process pages, demonstrating a small number of task completion and form-based failures."
   }
 ]
