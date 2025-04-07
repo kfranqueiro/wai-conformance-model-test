@@ -68,7 +68,8 @@ export const collections = {
                 /\/\*[\s\*]*@break\b([\s\S]*?)\*\//g,
                 content
               )) {
-                const id = `${path}-${match.index}`;
+                const lineNumber = content.slice(0, match.index).split("\n").length;
+                const id = `${path}-L${lineNumber}`;
                 // Remove leading '* ' from multiline comment blocks
                 const yaml = match[1].replace(/^\s+\* /gm, "");
                 const { frontmatter } = parseFrontmatter(`---\n${yaml}\n---`);
@@ -91,7 +92,7 @@ export const collections = {
               const { frontmatter } = parseFrontmatter(content);
               if (!frontmatter.breaks) continue;
               for (let i = 0; i < frontmatter.breaks.length; i++) {
-                const id = `${path}-${i}`;
+                const id = `${path}-E${i}`;
                 const data = await parseData({
                   id,
                   data: {
