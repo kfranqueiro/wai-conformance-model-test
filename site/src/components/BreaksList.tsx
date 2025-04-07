@@ -177,7 +177,12 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
         </div>
         <div>
           <label for="query">Filter:</label>
-          <input id="query" name="q" defaultValue={query} placeholder="e.g. focus, 1.4.10, link, ..." />
+          <input
+            id="query"
+            name="q"
+            defaultValue={query}
+            placeholder="e.g. focus, 1.4.10, link, ..."
+          />
         </div>
         <div>
           <button>Apply</button>
@@ -196,9 +201,13 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
             {arrangement === "area" &&
               breakSectionsMap[breaks[0].location.id].data.description && (
                 <>
-                  <p>
-                    {breakSectionsMap[breaks[0].location.id].data.description}
-                  </p>
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        breakSectionsMap[breaks[0].location.id].data
+                          .description!,
+                    }}
+                  />
                   {breakSectionsMap[breaks[0].location.id].data
                     .discussionItems && (
                     <>
@@ -208,7 +217,9 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
                       <ul>
                         {breakSectionsMap[
                           breaks[0].location.id
-                        ].data.discussionItems?.map((item) => <li>{item}</li>)}
+                        ].data.discussionItems?.map((item) => (
+                          <li dangerouslySetInnerHTML={{ __html: item }} />
+                        ))}
                       </ul>
                     </>
                   )}
@@ -224,14 +235,18 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
                   )}
                   {b.description.map((description) => (
                     <dd>
-                      {description}
+                      <span dangerouslySetInnerHTML={{ __html: description }} />
                       {b.discussionItems &&
                         (b.discussionItems.length === 1 ? (
                           <div>
                             <strong class="discussion-item">
                               Discussion item:
                             </strong>{" "}
-                            {b.discussionItems[0]}
+                            <span
+                              dangerouslySetInnerHTML={{
+                                __html: b.discussionItems[0],
+                              }}
+                            />
                           </div>
                         ) : (
                           <>
@@ -242,7 +257,9 @@ export const BreaksList = ({ breaks, breakSectionsMap }: BreaksListProps) => {
                             </div>
                             <ul>
                               {b.discussionItems.map((item) => (
-                                <li>{item}</li>
+                                <li
+                                  dangerouslySetInnerHTML={{ __html: item }}
+                                />
                               ))}
                             </ul>
                           </>

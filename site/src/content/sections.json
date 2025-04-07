@@ -10,7 +10,7 @@
     "description": "This section includes only the [All] Colections page, demonstrating content that has a moderate-to-high number of accessibility failures, some of which would be very difficult to work around. The failures present a mix of those that can be found through automated testing and those that require manual testing.",
     "discussionItems": [
       "Should emojis that are used as part of a span o text be hidden from assistive technology or have a suitable accessible name to aid in comprehension?",
-      "Is wrapping an animation in a prefers-reduced-motion media query sufficient for automatically animated content?"
+      "Is wrapping an animation in a <code>prefers-reduced-motion</code> media query sufficient for automatically animated content?"
     ]
   },
   {
@@ -31,7 +31,7 @@
   {
     "id": "Home Collection",
     "path": "collections/home/",
-    "description": "This section demonstrates content that has few accessibility failures, BUT the failures that exist could cause individuals with disabilities physical or psychological harm."
+    "description": "This section demonstrates content that has few accessibility failures, BUT the failures that exist could cause physical or psychological harm to individuals with disabilities."
   },
   {
     "id": "Music Collection",
@@ -51,8 +51,8 @@
     "path": "early-home-computers-event/",
     "description": "This section demonstrates issues with focus management, accessible names, incompletely implement controls for user interface components with ARIA roles, reading order, and Windows high-contrast mode.",
     "discussionItems": [
-      "Is misusing CSS forced colors something that WCAG 3 needs to address?",
-      "Do WCAG 3's Adjust Color and/or AT Control have the same coverage as Section 508's and EN 301 549's User Preference requirement?"
+      "Is misusing <a href=\"https://drafts.csswg.org/mediaqueries-5/#forced-colors\">CSS forced colors</a> something that WCAG 3 needs to address?",
+      "Do WCAG 3's Adjust Color and/or AT Control have the same coverage as Section 508's and EN 301 549's <a href=\"https://www.access-board.gov/ict/#503.2\">User Preference</a> requirement?"
     ]
   },
   {
