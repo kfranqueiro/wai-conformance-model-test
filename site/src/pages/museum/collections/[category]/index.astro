@@ -46,7 +46,7 @@ const { Content } = await render(category);
  * @break
  * location: Music Collection
  * wcag3:
- *   - Control information
+ *   - Control labels
  *   - Verbosity
  * description: |
  *   The link for each entry is overly verbose, due to the inclusion of
@@ -58,7 +58,7 @@ const shouldWrapImageInLink =
  * @break
  * location: Sports Collection
  * wcag2: 1.1.1
- * wcag3: Image alternatives
+ * wcag3: Equivalent text alternative
  * description: |
  *   The alt text on each entry's image repeats the entry's title,
  *   rather than describing the image.
@@ -151,8 +151,16 @@ const shouldDuplicateLink =
                  * @break
                  * location: Sports Collection
                  * wcag2: 2.4.7
-                 * wcag3: Keyboard focus appearance
+                 * wcag3: User agent default indicator
                  * description: There is no visible focus outline when a collection's image is focused.
+                 * discussionItems:
+                 *   - This is technically using the user agent default indicator, but
+                 *     due to the way elements are styled, the region where the
+                 *     focus rectangle is drawn is obscured from view.
+                 *     It seems odd to fail "user agent default indicator" in any situation,
+                 *     but also seems technically wrong to fail "custom indicator" because a
+                 *     custom indicator isn't being used. Moreover, would an auditor be expected to
+                 *     dig into the code to know which of these to specifically fail?
                  */
               }
               <ConditionalParent

@@ -3,7 +3,7 @@ title: Technology
 breaklocation: Technology Collection
 breaks:
 - wcag2: 1.1.1
-  wcag3: Image alternatives
+  wcag3: Equivalent text alternative
   description: Some of the exhibit images lack alt text.
 ---
 

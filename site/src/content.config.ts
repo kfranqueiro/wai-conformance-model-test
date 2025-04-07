@@ -8,7 +8,7 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 
 import { regExpMatchGenerator } from "./lib/util";
-import { wcag2SuccessCriteria, type Wcag2SuccessCriterion } from "./lib/wcag";
+import { wcag2SuccessCriteria, wcag3Requirements, type Wcag2SuccessCriterion } from "./lib/wcag";
 
 /** Fields in common between our schemas that use Astro's image() */
 const baseImageSchema = z.object({
@@ -137,8 +137,7 @@ export const collections = {
         )
           .optional()
           .transform(transformToOptionalArray),
-        // TODO: validate against WCAG 3 requirements present in ED?
-        wcag3: singleOrArray(z.string())
+        wcag3: singleOrArray(z.enum(wcag3Requirements))
           .optional()
           .transform(transformToOptionalArray),
       })

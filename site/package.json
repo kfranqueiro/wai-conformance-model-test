@@ -10,6 +10,7 @@
     "build": "astro check && astro build",
     "build:fixed": "astro check && cross-env PUBLIC_FIXED=1 astro build",
     "preview": "astro preview",
+    "sync": "astro sync",
     "astro": "astro"
   },
   "dependencies": {

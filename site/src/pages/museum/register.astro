@@ -38,7 +38,7 @@ import Layout from "@/layouts/Layout.astro";
       /**
        * @break
        * wcag2: 1.1.1
-       * wcag3: Image alternatives
+       * wcag3: Equivalent text alternative
        * description: A CAPTCHA is required and no alternative is provided.
        */
       /**
@@ -62,7 +62,7 @@ import Layout from "@/layouts/Layout.astro";
       /**
        * @break
        * wcag2: 2.4.13
-       * wcag3: Keyboard focus appearance
+       * wcag3: Custom indicator
        * description: |
        *   The focused state of the CAPTCHA field only affects a 1px-thick border,
        *   and does not have sufficient contrast against the unfocused state.
@@ -75,6 +75,8 @@ import Layout from "@/layouts/Layout.astro";
        *   - |
        *     The CAPTCHA field is initially empty and indicated only by a
        *     low-contrast underline, making its target area ambiguous.
+       * discussionItems:
+       *   - Does the invisible text cursor/caret fail Control contrast?
        */
     }
     <label

@@ -31,7 +31,7 @@ const { id, size = 48 } = Astro.props;
    * @break
    * location: Containers Collection
    * wcag2: 1.4.11
-   * wcag3: Non-text contrast
+   * wcag3: Control contrast
    * description: |
    *   The favorite icon uses a color that does not always maintain sufficient contrast with the background
    *   (see old clay jug).
@@ -74,14 +74,14 @@ const { id, size = 48 } = Astro.props;
       /**
        * @break
        * wcag2: 2.2.3
-       * wcag3: Adequate time
+       * wcag3: Disable timeout
        * description: |
        *   The toast displayed when the favorite state is toggled contains an undo button,
        *   but the toast disappears in a few seconds, giving the user limited time to interact.
        */
       /**
        * @break
-       * wcag3: Control interruptions
+       * wcag3: Control notifications
        * description: |
        *   The confirmation toasts in response to toggling favorites cannot be customized or disabled.
        */

@@ -3,7 +3,7 @@ title: Dishes
 breaklocation: Dishes Collection
 breaks:
   - wcag2: 1.1.1
-    wcag3: Image alternatives
+    wcag3: Equivalent text alternative
     description: The exhibit images do not have alt text.
   - wcag2: 3.1.5
     description: The Dishes collection has a reading level of upper secondary education with no alternative version.

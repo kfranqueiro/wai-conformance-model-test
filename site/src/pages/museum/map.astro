@@ -67,7 +67,7 @@ import Layout from "@/layouts/Layout.astro";
         /**
          * @break
          * wcag2: 1.1.1
-         * wcag3: Image alternatives
+         * wcag3: Equivalent text alternative
          * description: The arrow buttons over the map do not contain text labels.
          */
         /**
@@ -79,7 +79,7 @@ import Layout from "@/layouts/Layout.astro";
         /**
          * @break
          * wcag2: 2.4.13
-         * wcag3: Keyboard focus appearance
+         * wcag3: Custom indicator
          * description: |
          *   The map controls use a dotted focus outline with a color that falls well below
          *   3:1 contrast against the underlying map.
@@ -159,12 +159,11 @@ import Layout from "@/layouts/Layout.astro";
   /**
    * @break
    * wcag2: 2.5.1
+   * wcag3: Complex pointer inputs
    * description: On mobile devices, the only way to zoom the map is via a pinch gesture.
-   */
-  /**
-   * @break
-   * wcag3: Gestures & dragging
-   * description: On mobile devices, the only way to control the map is via dragging and pinch-to-zoom.
+   * discussionItems:
+   *   - In WCAG 3, the Gestures guideline suggests not requiring dragging,
+   *     but no individual requirement seems to explicitly prohibit it?
    */
   container.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 || (primaryPointer && secondaryPointer)) return;

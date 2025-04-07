@@ -33,21 +33,28 @@ import ShopLayout from "@/layouts/ShopLayout.astro";
       /**
        * @break
        * wcag2: 3.3.1
-       * wcag3:
-       *   - Error association
+       * wcag3: Error association
        * description: |
-       *   Errors in the payment form do not specifically describe what requirement was not met,
-       *   nor which field caused the failure.
+       *   Errors in the payment form are not programmatically associated with the field that caused the failure.
+       */
+      /**
+       * @break
+       * wcag2: 3.3.1
+       * wcag3: Error notification
+       * description: |
+       *   Errors in the payment form do not specifically describe what requirement was not met.
        */
       /**
        * @break
        * wcag2: 3.3.3
        * description: The payment form does not suggest corrections for formatting errors.
+       * discussionItems:
+       *   - Is there a WCAG 3 equivalent to this failure?
        */
       /**
        * @break
        * wcag3: Error identification
-       * description: The only indication of error is a border color change.
+       * description: The only indication of errors in payment form fields is a border color change.
        */
       /**
        * @break
@@ -59,7 +66,7 @@ import ShopLayout from "@/layouts/ShopLayout.astro";
        * @break
        * wcag3: Visible errors
        * description: |
-       *   There is only one generic error message, at the top of the entire form.
+       *   The payment form only displays one generic error message at the top.
        */
     }
     <p id="error" class="error" hidden></p>
@@ -74,9 +81,10 @@ import ShopLayout from "@/layouts/ShopLayout.astro";
       /**
        * @break
        * wcag2: 3.3.2
-       * wcag3: Input instructions
        * description: |
        *   The payment form does not provide any indication of accepted input formats.
+       * discussionItems:
+       *   - Is there an equivalent under WCAG 3 that this would fail?
        */
       /**
        * @break
@@ -152,10 +160,12 @@ import ShopLayout from "@/layouts/ShopLayout.astro";
   /**
    * @break
    * wcag2: 2.2.6
-   * wcag3: Adequate time
+   * wcag3: Disable timeout
    * description: |
    *   There is a timeout on each checkout step that may be
    *   too short to enter required information.
+   * discussionItems:
+   *   - For WCAG 3, should all 3 Adequate time requirements be considered as failed?
    */
   /**
    * @break
