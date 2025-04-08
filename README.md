@@ -28,6 +28,8 @@ Other useful npm commands within the `site` directory:
 - `npm run check` to check for TypeScript errors
 - `npm run build` to create a production build
 - `npm run preview` to preview the production build created by `npm run build`
+- `npm run update-wcag` to update `wcag*.json` files under `src/lib`
+  (this also runs `check` in case any updates impact currently-documented breaks)
 
 ### Broken and Fixed Variants
 
