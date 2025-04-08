@@ -6,10 +6,8 @@ level of education: "lower secondary education"
 content note: This content was generated with a prompt to make heavy use of idioms, synonyms, and metaphors
 breaks:
   - location: Home Collection
-    wcag3: Uncommon words
+    wcag3: Simplified written content
     description: The Porch Chair page makes use of idioms, synonyms, and metaphors.
-    discussionItems:
-      - What is the best way to categorize this failure for WCAG 3?
 ---
 
 Welcome to the <cite>Porch Chair</cite> exhibit.

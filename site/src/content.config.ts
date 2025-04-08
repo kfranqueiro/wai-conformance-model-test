@@ -8,7 +8,8 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 
 import { regExpMatchGenerator } from "./lib/util";
-import { wcag2SuccessCriteria, wcag3Requirements, type Wcag2SuccessCriterion } from "./lib/wcag";
+import wcag2SuccessCriteria from "./lib/wcag2.json";
+import wcag3Values from "./lib/wcag3.json";
 
 /** Fields in common between our schemas that use Astro's image() */
 const baseImageSchema = z.object({
@@ -68,7 +69,9 @@ export const collections = {
                 /\/\*[\s\*]*@break\b([\s\S]*?)\*\//g,
                 content
               )) {
-                const lineNumber = content.slice(0, match.index).split("\n").length;
+                const lineNumber = content
+                  .slice(0, match.index)
+                  .split("\n").length;
                 const id = `${path}-L${lineNumber}`;
                 // Remove leading '* ' from multiline comment blocks
                 const yaml = match[1].replace(/^\s+\* /gm, "");
@@ -134,11 +137,20 @@ export const collections = {
         location: reference("breakSections"),
         photosensitivity: z.boolean().optional(),
         wcag2: singleOrArray(
-          z.enum(Object.keys(wcag2SuccessCriteria) as [Wcag2SuccessCriterion])
+          z.enum(
+            Object.keys(wcag2SuccessCriteria) as [
+              keyof typeof wcag2SuccessCriteria,
+            ]
+          )
         )
           .optional()
           .transform(transformToOptionalArray),
-        wcag3: singleOrArray(z.enum(wcag3Requirements))
+        // TypeScript + Vite manage to recognize object keys from wcag2.json,
+        // but wcag3.json only comes across as a generic string array,
+        // so validate using a refinement instead
+        wcag3: singleOrArray(
+          z.string().refine((value) => wcag3Values.includes(value))
+        )
           .optional()
           .transform(transformToOptionalArray),
       })

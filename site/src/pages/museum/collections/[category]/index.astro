@@ -151,16 +151,8 @@ const shouldDuplicateLink =
                  * @break
                  * location: Sports Collection
                  * wcag2: 2.4.7
-                 * wcag3: User agent default indicator
+                 * wcag3: Keyboard focus appearance
                  * description: There is no visible focus outline when a collection's image is focused.
-                 * discussionItems:
-                 *   - This is technically using the user agent default indicator, but
-                 *     due to the way elements are styled, the region where the
-                 *     focus rectangle is drawn is obscured from view.
-                 *     It seems odd to fail "user agent default indicator" in any situation,
-                 *     but also seems technically wrong to fail "custom indicator" because a
-                 *     custom indicator isn't being used. Moreover, would an auditor be expected to
-                 *     dig into the code to know which of these to specifically fail?
                  */
               }
               <ConditionalParent

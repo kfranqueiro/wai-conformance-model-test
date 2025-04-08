@@ -6,7 +6,7 @@ import sortBy from "lodash-es/sortBy";
 import { useEffect, useRef, useState, type FormEvent } from "preact/compat";
 
 import { museumBaseUrl } from "@/lib/constants";
-import { wcag2SuccessCriteria, type Wcag2SuccessCriterion } from "@/lib/wcag";
+import wcag2SuccessCriteria from "@/lib/wcag2.json";
 
 type BreakSectionsMap = Record<string, CollectionEntry<"breakSections">>;
 
@@ -25,7 +25,7 @@ const formSchema = z.object({
 interface SingleBreak
   extends Omit<CollectionEntry<"breaks">["data"], "wcag2" | "wcag3"> {
   id: CollectionEntry<"breaks">["id"];
-  wcag2?: Wcag2SuccessCriterion;
+  wcag2?: keyof typeof wcag2SuccessCriteria;
   wcag3?: string;
 }
 
