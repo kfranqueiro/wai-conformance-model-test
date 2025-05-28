@@ -34,6 +34,15 @@ const transformToOptionalArray = <T>(
   typeof value === "undefined" || Array.isArray(value) ? value : [value];
 
 export const collections = {
+  breakProcesses: defineCollection({
+    loader: file("src/content/processes.json"),
+    schema: z.object({
+      title: z.string(),
+      discussionItems: z.array(z.string()).nonempty().optional(),
+      id: z.string(),
+    }),
+  }),
+
   breakSections: defineCollection({
     loader: file("src/content/sections.json"),
     schema: z.object({
@@ -65,6 +74,11 @@ export const collections = {
                 /\/\*[\s\*]*@breaklocation([\s\S]*?)\*\//.exec(content);
               const location = locationMatch?.[1].trim() || undefined;
 
+              const processMatch =
+                /\/\*[\s\*]*@breakprocess([\s\S]*?)\*\//.exec(content);
+              const process =
+                processMatch?.[1].trim().split(/\s*,\s*/) || undefined;
+
               for (const match of regExpMatchGenerator(
                 /\/\*[\s\*]*@break\b([\s\S]*?)\*\//g,
                 content
@@ -80,6 +94,7 @@ export const collections = {
                   id,
                   data: {
                     location,
+                    process,
                     ...frontmatter,
                   },
                 });
@@ -100,6 +115,7 @@ export const collections = {
                   id,
                   data: {
                     location: frontmatter.breaklocation,
+                    process: frontmatter.breakprocess,
                     ...frontmatter.breaks[i],
                   },
                 });
@@ -136,6 +152,11 @@ export const collections = {
         discussionItems: z.array(z.string()).nonempty().optional(),
         location: reference("breakSections"),
         photosensitivity: z.boolean().optional(),
+        process:
+          // Using z.string rather than reference makes working with values easier;
+          // zod does not correctly short-circuit at z.literal("ALL"),
+          // and reference no longer guarantees integrity in Astro 5
+          singleOrArray(z.string()).transform(transformToArray),
         wcag2: singleOrArray(
           z.enum(
             Object.keys(wcag2SuccessCriteria) as [

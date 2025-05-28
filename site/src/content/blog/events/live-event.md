@@ -8,6 +8,7 @@ imagePosition: right
 video: "live/live.mp4"
 videoCover: "live/live-cover.webp"
 breaklocation: Blog
+breakprocess: blog
 breaks:
   - wcag2: 1.2.4
     wcag3: Captions

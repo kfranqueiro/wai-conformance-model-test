@@ -6,6 +6,7 @@ brokenUrl: true
 image: "@/assets/images/blog/dall-e-broken-music-exhibit.webp"
 imageDescription: Coins with a golden hue lie on a broken surface.
 breaklocation: Blog
+breakprocess: blog
 breaks:
   - wcag2: 3.1.1
     wcag3: Error identification

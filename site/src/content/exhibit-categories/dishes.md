@@ -1,6 +1,7 @@
 ---
 title: Dishes
 breaklocation: Dishes Collection
+breakprocess: collections
 breaks:
   - wcag2: 1.1.1
     wcag3: Equivalent text alternative

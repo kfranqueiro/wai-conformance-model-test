@@ -9,7 +9,7 @@
     "path": "collections/",
     "description": "This section includes only the [All] Colections page, demonstrating content that has a moderate-to-high number of accessibility failures, some of which would be very difficult to work around. The failures present a mix of those that can be found through automated testing and those that require manual testing.",
     "discussionItems": [
-      "Should emojis that are used as part of a span o text be hidden from assistive technology or have a suitable accessible name to aid in comprehension?",
+      "Should emojis that are used as part of a span of text be hidden from assistive technology or have a suitable accessible name to aid in comprehension?",
       "Is wrapping an animation in a <code>prefers-reduced-motion</code> media query sufficient for automatically animated content?"
     ]
   },

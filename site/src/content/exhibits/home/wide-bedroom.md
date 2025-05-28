@@ -4,10 +4,11 @@ imageDescription: A large dilapidated room whose focal point is a bare bed frame
 image: "@/assets/images/exhibits/home/pexels-wendelinjacober-1853951.jpg"
 
 level of education: "lower secondary education"
-content note: This content was generated with a prompt to to make the language and tone be disrespectful to the owners of the property for letting the house get into a state of disrepair and to the reader for wanting to visit it. 
+content note: This content was generated with a prompt to to make the language and tone be disrespectful to the owners of the property for letting the house get into a state of disrepair and to the reader for wanting to visit it.
+breaklocation: Home Collection
+breakprocess: collections
 breaks:
-  - location: Home Collection
-    wcag3: Appropriate tone
+  - wcag3: Appropriate tone
     description: The language and tone of the Wide Bedroom page is disrespectful to the past owners of the property and the reader.
 ---
 

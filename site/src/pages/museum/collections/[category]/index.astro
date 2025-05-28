@@ -32,6 +32,8 @@ export async function getStaticPaths() {
 const { category, exhibits } = Astro.props;
 const { Content } = await render(category);
 
+/** @breakprocess collections */
+
 /**
  * @break
  * location: Music Collection
