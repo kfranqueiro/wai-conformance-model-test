@@ -4,12 +4,12 @@ import { BreaksList } from "@/components/BreaksList";
 import MetaLayout from "@/layouts/MetaLayout.astro";
 
 const breaks = await getCollection("breaks");
-const breakSectionsMap = (await getCollection("breakSections")).reduce(
-  (map, section) => {
-    map[section.id] = section;
+const breakProcessesMap = (await getCollection("breakProcesses")).reduce(
+  (map, process) => {
+    map[process.id] = process;
     return map;
   },
-  {} as Record<string, CollectionEntry<"breakSections">>
+  {} as Record<string, CollectionEntry<"breakProcesses">>
 );
 ---
 
@@ -67,7 +67,7 @@ const breakSectionsMap = (await getCollection("breakSections")).reduce(
       )
     }
 
-    <BreaksList client:load breaks={breaks} breakSectionsMap={breakSectionsMap} />
+    <BreaksList client:load breaks={breaks} breakProcessesMap={breakProcessesMap} />
   </section>
 
   <section id="acknowledgment">
