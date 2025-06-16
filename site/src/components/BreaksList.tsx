@@ -19,13 +19,15 @@ const formSchema = z.object({
   version: z.enum(["2", "3"]).default("2"),
 });
 
-/** Simpler object format that entries are reduced to during processing */
+/** Reduced object format pertaining to a single SC/requirement */
 interface SingleBreak
   extends Omit<
     CollectionEntry<"breaks">["data"],
     "location" | "process" | "wcag2" | "wcag3"
   > {
   id: CollectionEntry<"breaks">["id"];
+  /** Set during second pass after breaks have been sorted, for generating permalinks */
+  offset: number;
   wcag2?: keyof typeof wcag2SuccessCriteria;
   wcag3?: string;
 }
@@ -95,8 +97,9 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
     const breaks: SingleBreak[] = [];
     for (const value of brk.data[wcagProp]!) {
       breaks.push({
-        ...omit(brk.data, "wcag2", "wcag3"),
+        ...omit(brk.data, "location", "process", "wcag2", "wcag3"),
         id: brk.id,
+        offset: 0, // will be updated below
         [wcagProp]: value,
       });
     }
@@ -105,13 +108,24 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
     const processes = isEqual(brk.data.process, ["ALL"])
       ? Object.keys(breakProcessesMap)
       : brk.data.process;
-    for (const process of processes) groupedBreaks[process].push(...breaks);
+    for (const process of processes) {
+      // Shallow-clone each break to allow subsequent pass to make process-specific edits
+      groupedBreaks[process].push(...breaks.map((brk) => ({ ...brk })));
+    }
   }
 
   for (const process of Object.keys(breakProcessesMap)) {
     if (!groupedBreaks[process].length) delete groupedBreaks[process];
-    else
+    else {
       groupedBreaks[process] = sortBy(groupedBreaks[process], getSortableWcag);
+      let offset = 0;
+      groupedBreaks[process].forEach((singleBreak, i, breaks) => {
+        if (i > 0 && singleBreak[wcagProp] !== breaks[i - 1][wcagProp])
+          offset = 0;
+        singleBreak.offset = offset;
+        offset += singleBreak.description.length;
+      });
+    }
   }
 
   const onSubmit = (event: FormEvent) => {
@@ -193,29 +207,30 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
             )}
 
             <dl>
-              {breaks.map((b, i) => (
+              {breaks.map((brk, i) => (
                 <>
                   {(i < 1 ||
-                    getSortableWcag(breaks[i - 1]) !== getSortableWcag(b)) && (
+                    getSortableWcag(breaks[i - 1]) !==
+                      getSortableWcag(brk)) && (
                     <dt>
                       <BreakWcagLabel
-                        break={b}
+                        break={brk}
                         {...{ breakProcessesMap, version }}
                       />
                     </dt>
                   )}
-                  {b.description.map((description) => (
-                    <dd>
+                  {brk.description.map((description, i) => (
+                    <dd id={`${brk.id}-${brk.offset + i}`}>
                       <span dangerouslySetInnerHTML={{ __html: description }} />
-                      {b.discussionItems &&
-                        (b.discussionItems.length === 1 ? (
+                      {brk.discussionItems &&
+                        (brk.discussionItems.length === 1 ? (
                           <div>
                             <strong class="discussion-item">
                               Discussion item:
                             </strong>{" "}
                             <span
                               dangerouslySetInnerHTML={{
-                                __html: b.discussionItems[0],
+                                __html: brk.discussionItems[0],
                               }}
                             />
                           </div>
@@ -227,7 +242,7 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
                               </strong>
                             </div>
                             <ul>
-                              {b.discussionItems.map((item) => (
+                              {brk.discussionItems.map((item) => (
                                 <li
                                   dangerouslySetInnerHTML={{ __html: item }}
                                 />
