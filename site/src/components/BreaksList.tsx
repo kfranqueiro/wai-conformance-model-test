@@ -1,5 +1,6 @@
 import type { CollectionEntry } from "astro:content";
 import { z } from "astro/zod";
+import GithubSlugger from "github-slugger";
 import omit from "lodash-es/omit";
 import sortBy from "lodash-es/sortBy";
 import { useEffect, useRef, useState, type FormEvent } from "preact/compat";
@@ -26,8 +27,6 @@ interface SingleBreak
     "location" | "process" | "wcag2" | "wcag3"
   > {
   id: CollectionEntry<"breaks">["id"];
-  /** Set during second pass after breaks have been sorted, for generating permalinks */
-  offset: number;
   wcag2?: keyof typeof wcag2SuccessCriteria;
   wcag3?: string;
 }
@@ -99,7 +98,6 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
       breaks.push({
         ...omit(brk.data, "location", "process", "wcag2", "wcag3"),
         id: brk.id,
-        offset: 0, // will be updated below
         [wcagProp]: value,
       });
     }
@@ -116,16 +114,8 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
 
   for (const process of Object.keys(breakProcessesMap)) {
     if (!groupedBreaks[process].length) delete groupedBreaks[process];
-    else {
+    else
       groupedBreaks[process] = sortBy(groupedBreaks[process], getSortableWcag);
-      let offset = 0;
-      groupedBreaks[process].forEach((singleBreak, i, breaks) => {
-        if (i > 0 && singleBreak[wcagProp] !== breaks[i - 1][wcagProp])
-          offset = 0;
-        singleBreak.offset = offset;
-        offset += singleBreak.description.length;
-      });
-    }
   }
 
   const onSubmit = (event: FormEvent) => {
@@ -164,6 +154,8 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
     addEventListener("popstate", updateValues);
     return () => removeEventListener("popstate", updateValues);
   }, []);
+
+  const slugger = new GithubSlugger();
 
   return (
     <>
@@ -220,7 +212,7 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
                     </dt>
                   )}
                   {brk.description.map((description, i) => (
-                    <dd id={`${brk.id}-${brk.offset + i}`}>
+                    <dd id={slugger.slug(`${name}-${brk[wcagProp]?.replace(/\./g, "-")}`)}>
                       <span dangerouslySetInnerHTML={{ __html: description }} />
                       {brk.discussionItems &&
                         (brk.discussionItems.length === 1 ? (
