@@ -5,7 +5,7 @@ import type { ZodType, ZodTypeDef } from "astro/zod";
 import fg from "fast-glob";
 
 import { readFile } from "fs/promises";
-import { join } from "path";
+import { basename, join } from "path";
 
 import { regExpMatchGenerator } from "./lib/util";
 import wcag2SuccessCriteria from "./lib/wcag2.json";
@@ -66,6 +66,26 @@ export const collections = {
           });
           store.clear();
 
+          /** Attempts to resolve a museum page file's path to a default URL path. */
+          const resolvePageHref = (path: string) =>
+            path.startsWith("pages/museum/") && !/\[.*\]/.test(path)
+              ? path
+                  .replace(/^pages\/museum/, "")
+                  .replace(/(?:\/index)?\.astro$/, "/#main")
+              : undefined;
+
+          /** Attempts to resolve a content file's path to a default URL path. */
+          const resolveContentHref = (path: string) => {
+            if (/\bblog\b/.test(path)) return `/blog/${basename(path)}/#main`;
+            if (/\bexhibit-categories\b/.test(path))
+              return `/collections/${basename(path)}/#main`;
+            if (/\bexhibits\b/.test(path))
+              return `/collections/${path.replace(/.*\bexhibits\//, "/#main")}`;
+            if (/\bproducts\b/.test(path))
+              return `/gift-shop/${path.replace(/.*\bproducts\//, "/#main")}`;
+            return undefined;
+          };
+
           for (const path of paths) {
             const content = await readFile(join("src", path), "utf8");
             if (path.endsWith(".astro")) {
@@ -78,6 +98,11 @@ export const collections = {
                 /\/\*[\s\*]*@breakprocess([\s\S]*?)\*\//.exec(content);
               const process =
                 processMatch?.[1].trim().split(/\s*,\s*/) || undefined;
+
+              const hrefMatch = /\/\*[\s\*]*@breakhref([\s\S]*?)\*\//.exec(
+                content
+              );
+              const href = hrefMatch?.[1].trim() || resolvePageHref(path);
 
               for (const match of regExpMatchGenerator(
                 /\/\*[\s\*]*@break\b([\s\S]*?)\*\//g,
@@ -93,11 +118,16 @@ export const collections = {
                 const data = await parseData({
                   id,
                   data: {
+                    href,
                     location,
                     process,
                     ...frontmatter,
                   },
                 });
+                // Allow individual hrefs to override hash while inheriting rest of default path
+                if (href && (data.href === "" || data.href?.startsWith("#")))
+                  data.href = `${href.replace(/#.*$/, "")}${data.href}`;
+
                 store.set({
                   id,
                   data,
@@ -111,14 +141,20 @@ export const collections = {
               if (!frontmatter.breaks) continue;
               for (let i = 0; i < frontmatter.breaks.length; i++) {
                 const id = `${path}-E${i}`;
+                const href = frontmatter.breakhref || resolveContentHref(path);
                 const data = await parseData({
                   id,
                   data: {
                     location: frontmatter.breaklocation,
                     process: frontmatter.breakprocess,
+                    href,
                     ...frontmatter.breaks[i],
                   },
                 });
+                // Allow individual hrefs to override hash while ineriting rest of default path
+                if (href && (data.href === "" || data.href?.startsWith("#")))
+                  data.href = `${href.replace(/#.*$/, "")}${data.href}`;
+
                 store.set({
                   id,
                   data,
@@ -150,6 +186,7 @@ export const collections = {
       .object({
         description: singleOrArray(z.string()).transform(transformToArray),
         discussionItems: z.array(z.string()).nonempty().optional(),
+        href: z.string().regex(/^(\/|#|$)/),
         location: reference("breakSections"),
         photosensitivity: z.boolean().optional(),
         process:

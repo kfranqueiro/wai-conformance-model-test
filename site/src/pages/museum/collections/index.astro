@@ -39,6 +39,9 @@ for (const { data, id } of exhibits) {
 // which we would intentionally want to break anyway)
 const tabIndices = [1, 2, 4, 6, 3, 5, 7];
 
+/** @breaklocation Collections */
+/** @breakprocess collections */
+
 /**
  * @break
  * wcag2: 3.2.3
@@ -55,9 +58,6 @@ const headerNavLinks = filterNavTreeLinks(
   defaultNavLinks,
   ({ name }) => !seeMoreLabels.includes(name)
 );
-
-/** @breaklocation Collections */
-/** @breakprocess collections */
 
 /**
  * @break

@@ -49,7 +49,7 @@ so the "fixed" variant is even more work-in-progress.
 A couple of components exist to help with implementing broken and fixed variants of features side-by-side.
 These work with the commands listed above to produce the broken and fixed variants.
 
-### Defining different attributes on one element: Fixable
+### Defining Different Attributes on One Element with Fixable
 
 ```astro
 <Fixable as="tagname" ... broken={...} fixed={...}>
@@ -61,7 +61,7 @@ These work with the commands listed above to produce the broken and fixed varian
 - Any attributes specific to either the broken or fixed variant should be
   defined within `broken` or `fixed` (each of these is optional)
 
-### Defining a different set of elements: FixableRegion
+### Defining a Different Set of Elements with FixableRegion
 
 ```astro
 <FixableRegion>
@@ -88,6 +88,7 @@ In Astro files (for pages or components):
  * @break
  * location: Home & Search
  * process: learning
+ * href: /#main
  * wcag2: 2.2.2
  * wcag3: Motion
  * description: ...
@@ -102,6 +103,7 @@ In Markdown frontmatter (for collection entries):
 breaks:
   - location: Home & Search
     process: learning
+    href: /#main
     wcag2: 2.2.2
     wcag3: Motion
     description: ...
@@ -118,6 +120,7 @@ In both cases, the same YAML format is used.
 - **process** - Indicates which process (i.e. user flow) contains the break;
   must reference one or more existing `id`s in `src/content/processes.json`
   - May be `ALL`, to indicate a break that impacts all processes
+- **href** - Indicates URL where the break can be observed; see further remarks below
 - **wcag2** - WCAG 2 Success Criterion number(s)
 - **wcag3** - WCAG 3 Requirement(s)
 - **description** - Description(s) of break(s)
@@ -129,23 +132,58 @@ Either `wcag2` or `wcag3` (or both) must be specified.
 See `src/content.config.ts` for the full zod schema specification for
 both breaks and sections.
 
-### Specifying a default location for an entire file
+### Specifying Default Values for an Entire File
 
-If a file documents many breaks that pertain to the same `location`,
-it may be specified once up front via `breaklocation` instead, and
-omitted from individual break definitions. If an individual definition
-still defines `location`, it will override `breaklocation`.
+If a file documents many breaks that pertain to the same `location`, `process`, or `href`,
+it may be specified once across the entire file instead via
+`breaklocation`, `breakprocess`, or `breakhref`, respectively.
+The value can then be omitted from individual break definitions.
+If an individual definition still defines the respective property,
+it will override the file-wide setting.
 
 In Astro files:
 
 ```ts
-/** @breaklocation Home & Search */
+/** @breakprocess learning */
 ```
 
 In Markdown frontmatter:
 
 ```yaml
-breaklocation: Home & Search
+breakprocess: learning
 ```
 
-The same applies for `process`, via `breakprocess`.
+### The `href` Property
+
+The path part of `href`'s value should always begin and end with `/` for consistency,
+and is treated as relative to the Museum homepage (`/museum/`).
+A hash part may optionally be included after the trailing slash.
+
+#### Default Behavior
+
+The `href` property is required, but defaults are provided in the following cases:
+
+- Files under `src/pages` which correspond to a single output file (i.e. no `[...]`)
+- Files under `src/content`
+
+In these cases, the `href` property will default to pointing to
+the `main` element (i.e. `#main`) at the page or entry's corresponding URL.
+This can be overridden, both by file-wide `breakhref` and within specific breaks.
+
+#### Hash-only Overrides
+
+In cases where a default page is defined (either via the above cases,
+or file-wide via `breakhref`), it is possible to override a specific break to
+point to a different region of the same page by specifying only a hash.
+Note, however, that this needs to be quoted, to avoid YAML interpreting it as a comment:
+
+```yaml
+href: "#my-other-section"
+```
+
+In these cases, it is also possible to point specifically to the top of the
+default page (i.e. with no hash in the URL) by specifying an empty string:
+
+```yaml
+href: ""
+```

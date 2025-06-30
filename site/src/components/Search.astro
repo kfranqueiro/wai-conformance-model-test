@@ -11,9 +11,11 @@ const { mode = getMode() } = Astro.props;
 
 /** @breaklocation Home & Search */
 /** @breakprocess searching */
+/** @breakhref / */
 
 /**
  * @break
+ * href: /search
  * wcag2: 2.4.2
  * wcag3: Title
  * description: The search result page title is not accurate.
@@ -21,7 +23,7 @@ const { mode = getMode() } = Astro.props;
 /**
  * @break
  * wcag3: Notify on change
- * description: No programmatic notification occurs when the content changes.
+ * description: No programmatic notification occurs when the content changes upon searching.
  */
 /**
  * @break
@@ -32,6 +34,7 @@ const { mode = getMode() } = Astro.props;
  */
 /**
  * @break
+ * href: /search
  * wcag2: 3.3.1
  * wcag3: Error identification
  * description: Empty search results and misspellings do not throw an error.

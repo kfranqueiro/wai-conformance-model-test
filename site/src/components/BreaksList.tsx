@@ -7,6 +7,7 @@ import { useEffect, useRef, useState, type FormEvent } from "preact/compat";
 
 import wcag2SuccessCriteria from "@/lib/wcag2.json";
 import isEqual from "lodash-es/isEqual";
+import { museumBaseUrl } from "@/lib/constants";
 
 type BreakProcessesMap = Record<string, CollectionEntry<"breakProcesses">>;
 
@@ -211,9 +212,15 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
                       />
                     </dt>
                   )}
-                  {brk.description.map((description, i) => (
-                    <dd id={slugger.slug(`${name}-${brk[wcagProp]?.replace(/\./g, "-")}`)}>
-                      <span dangerouslySetInnerHTML={{ __html: description }} />
+                  {brk.description.map((description) => (
+                    <dd
+                      id={slugger.slug(
+                        `${name}-${brk[wcagProp]?.replace(/\./g, "-")}`
+                      )}
+                    >
+                      <a href={`${museumBaseUrl.slice(0, -1)}${brk.href}`}>
+                        {brk.href}
+                      </a>: <span dangerouslySetInnerHTML={{ __html: description }} />
                       {brk.discussionItems &&
                         (brk.discussionItems.length === 1 ? (
                           <div>
