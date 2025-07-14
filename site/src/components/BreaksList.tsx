@@ -205,7 +205,11 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
                   {(i < 1 ||
                     getSortableWcag(breaks[i - 1]) !==
                       getSortableWcag(brk)) && (
-                    <dt>
+                    <dt
+                      id={slugger.slug(
+                        `${name}-${brk[wcagProp]?.replace(/\./g, "-")}`
+                      )}
+                    >
                       <BreakWcagLabel
                         break={brk}
                         {...{ breakProcessesMap, version }}
@@ -220,7 +224,9 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
                     >
                       <a href={`${museumBaseUrl.slice(0, -1)}${brk.href}`}>
                         {brk.href}
-                      </a>: <span dangerouslySetInnerHTML={{ __html: description }} />
+                      </a>
+                      :{" "}
+                      <span dangerouslySetInnerHTML={{ __html: description }} />
                       {brk.discussionItems &&
                         (brk.discussionItems.length === 1 ? (
                           <div>
