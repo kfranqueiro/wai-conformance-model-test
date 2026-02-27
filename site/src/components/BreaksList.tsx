@@ -3,7 +3,8 @@ import { z } from "astro/zod";
 import GithubSlugger from "github-slugger";
 import omit from "lodash-es/omit";
 import sortBy from "lodash-es/sortBy";
-import { useEffect, useRef, useState, type FormEvent } from "preact/compat";
+import type { SubmitEventHandler } from "preact";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 import wcag2SuccessCriteria from "@/lib/wcag2.json";
 import isEqual from "lodash-es/isEqual";
@@ -119,7 +120,7 @@ export const BreaksList = ({ breaks, breakProcessesMap }: BreaksListProps) => {
       groupedBreaks[process] = sortBy(groupedBreaks[process], getSortableWcag);
   }
 
-  const onSubmit = (event: FormEvent) => {
+  const onSubmit: SubmitEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
     setValues(
