@@ -11,7 +11,7 @@ import { defaultNavLinks, filterNavTreeLinks } from "@/lib/nav-links";
  * @break
  * href: ""
  * wcag2: 3.2.3
- * wcag3: Consistent navigation
+ * wcag3: Consistent navigation order
  * description: The "Take a Tour" item is missing from the top nav on this page.
  */
 const headerNavLinks =
@@ -35,20 +35,23 @@ const headerNavLinks =
     /**
      * @break
      * wcag2: 1.2.6
+     * wcag3: Sign language available (prerecorded)
      * description: |
      *   No sign language interpretation is provided for the prerecorded audio content
      *   in the video at the top of the page.
      */
     /**
      * @break
-     * wcag3: Audio descriptions
+     * wcag3: Audio descriptions available (prerecorded)
      * description: |
      *   No audio description is provided to explain the non-narrated contents of
      *   the video at the top of the page.
      */
     /**
      * @break
-     * wcag3: Findable media alternatives
+     * wcag3:
+     *   - Media alternatives findable
+     *   - Transcripts available
      * description: |
      *   No media alternative is provided to explain the contents of
      *   the video at the top of the page.
@@ -60,7 +63,7 @@ const headerNavLinks =
     /**
      * @break
      * wcag2: 2.2.4
-     * wcag3: Control notifications
+     * wcag3: Notifications adjustable
      * description: The time to next departure is called out every 15 seconds and cannot be turned off.
      */
   }

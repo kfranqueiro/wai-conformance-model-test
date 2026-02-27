@@ -45,7 +45,7 @@ const tabIndices = [1, 2, 4, 6, 3, 5, 7];
 /**
  * @break
  * wcag2: 3.2.3
- * wcag3: Consistent navigation
+ * wcag3: Consistent navigation order
  * description: |
  *   The links that appear within the "See More" section within the main content
  *   are removed from the header navigation where they otherwise typically appear.
@@ -62,13 +62,13 @@ const headerNavLinks = filterNavTreeLinks(
 /**
  * @break
  * wcag2: 1.4.13
- * wcag3: Hover information
+ * wcag3: Hover or focus content dismissible
  * description: The text displayed over collection images upon hover can't be dismissed without moving the pointer.
  */
 /**
  * @break
  * wcag2: 2.1.1
- * wcag3: Keyboard only
+ * wcag3: Keyboard operable
  * description: The text label on each collection's link only becomes visible on hover (not focus).
  */
 /**
@@ -81,7 +81,7 @@ const headerNavLinks = filterNavTreeLinks(
 /**
  * @break
  * wcag2: 2.4.3
- * wcag3: Keyboard focus order
+ * wcag3: Focus order meaningful
  * description:
  *   - The collection links have explicit tabindex attributes, causing them to come before anything else in the page.
  *   - The links in the "See More" section are not included in the explicit order, meaning focus tabs to each collection link,
@@ -96,8 +96,10 @@ const headerNavLinks = filterNavTreeLinks(
     /**
      * @break
      * wcag2: 2.4.10
-     * wcag3: Section labels
+     * wcag3: Heading structure available
      * description: The page doesn't have an H1.
+     * discussionItems:
+     *   - For WCAG 3, is it more appropriate to fail this under Heading structure available or Sections labeled (or both)?
      */
   }
   <h2>Our Collections</h2>

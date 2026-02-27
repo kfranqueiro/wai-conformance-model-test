@@ -58,7 +58,9 @@ const postsByCategory = posts.reduce(
    * @break
    * href: ""
    * wcag2: 2.4.13
-   * wcag3: Custom indicator
+   * wcag3:
+   *   - Focus indicator contrast sufficient
+   *   - Focus indicator size sufficient
    * description: |
    *   In the top nav, links within submenus indicate focus by only a single border
        located equidistant from the text above and below it, making it ambiguous
@@ -69,7 +71,7 @@ const postsByCategory = posts.reduce(
    * @break
    * href: ""
    * wcag2: 4.1.2
-   * wcag3: Name, role, value, state
+   * wcag3: Roles, values, states, properties available
    * description: In the top navigation bar, there is no programmatic indication of expandable items.
    */
 }
@@ -83,7 +85,7 @@ const postsByCategory = posts.reduce(
            * wcag2:
            *   - 1.4.3
            *   - 1.4.6
-           * wcag3: Minimum text contrast
+           * wcag3: Text contrast sufficient (minimum)
            * description: |
            *   The "Blog" heading is superimposed over an image with no overlay to guarantee minimum contrast.
            */
@@ -111,9 +113,10 @@ const postsByCategory = posts.reduce(
               /**
                * @break
                * wcag2: 2.5.5
-               * wcag3: Target size optimum
                * description: |
                *   The link after the excerpt from the topmost post is smaller than 44 by 44 pixels.
+               * discussionItems:
+               *   - Is there no target size requirement in WCAG 3 anymore?
                */
             }
             <Fixable
@@ -138,8 +141,9 @@ const postsByCategory = posts.reduce(
                 /**
                  * @break
                  * wcag2: 2.3.3
-                 * wcag3: Motion
                  * description: Images zoom in on hover and do not respect <code>prefers-reduced-motion</code>.
+                 * discussionItems:
+                 *   - This does not fail No visual motion in WCAG 3 because of the "lasting longer than 5 seconds" condition
                  */
                 /**
                  * @break
@@ -147,8 +151,8 @@ const postsByCategory = posts.reduce(
                  *   - 2.4.4
                  *   - 2.4.9
                  * wcag3:
-                 *   - Control labels
-                 *   - Name, role, value, state
+                 *   - Interactive element names available
+                 *   - Roles, values, states, properties available
                  * description: |
                  *   Each post image, as well as the arrow on the topmost post, links to its post,
                  *   but has no content to describe the link.

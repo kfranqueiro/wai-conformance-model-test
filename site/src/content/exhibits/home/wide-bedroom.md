@@ -8,8 +8,10 @@ content note: This content was generated with a prompt to to make the language a
 breaklocation: Home Collection
 breakprocess: collections
 breaks:
-  - wcag3: Appropriate tone
+  - wcag3: Clear language review
     description: The language and tone of the Wide Bedroom page is disrespectful to the past owners of the property and the reader.
+    discussionItems:
+      - The "Appropriate tone" requirement was removed; does this specifically fail anything else?
 ---
 
 Welcome to the <cite>Wide Bedroom</cite> exhibit, if you can even call it that.

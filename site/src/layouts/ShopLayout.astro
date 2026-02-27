@@ -47,7 +47,7 @@ const headerNavLinks =
      * wcag2:
      *   - 1.4.3
      *   - 1.4.6
-     * wcag3: Minimum text contrast
+     * wcag3: Text contrast sufficient (minimum)
      * description: |
      *   The navigation bar content overflows its background on mobile viewports,
      *   making the cart link nearly invisible.
@@ -55,21 +55,21 @@ const headerNavLinks =
     /**
      * @break
      * wcag2: 1.4.13
-     * wcag3: Hover information
+     * wcag3: Hover or focus content dismissible
      * description: |
      *   In the top navigation bar, nested items open on hover and can only be dismissed by moving the pointer.
      */
     /**
      * @break
      * wcag2: 2.1.1
-     * wcag3: Keyboard only
+     * wcag3: Keyboard operable
      * description: |
      *   In the top navigation bar, parent items are not focusable (and therefore cannot be opened) via keyboard.
      */
     /**
      * @break
      * wcag2: 3.2.3
-     * wcag3: Consistent navigation
+     * wcag3: Consistent navigation order
      * description: |
      *   The Gift Shop link appears in the header on mobile viewports within gift shop pages,
      *   but does not appear there outside of the gift shop.
@@ -78,7 +78,7 @@ const headerNavLinks =
     /**
      * @break
      * wcag2: 4.1.2
-     * wcag3: Name, role, value, state
+     * wcag3: Roles, values, states, properties available
      * description: |
      *   In the top navigation bar, there is no programmatic indication of expandable items.
      */
@@ -91,8 +91,8 @@ const headerNavLinks =
        *   - 2.4.4
        *   - 2.4.9
        * wcag3:
-       *   - Control labels
-       *   - Name, role, value, state
+       *   - Interactive element names available
+       *   - Roles, values, states, properties available
        * description: |
        *   The cart link contains only an icon, with no text label explaining its purpose.
        * discussionItems:
@@ -115,7 +115,7 @@ const headerNavLinks =
        * @break
        * href: /gift-shop/#main
        * wcag2: 3.2.6
-       * wcag3: Consistent help
+       * wcag3: Consistent help available
        * description: |
        *   The help contact number is located above the site footer,
        *   as opposed to all other pages where it is inside the footer at the end.
@@ -130,7 +130,7 @@ const headerNavLinks =
   {
     /**
      * @break
-     * wcag3: Unambiguous text
+     * wcag3: Numerical metadata available
      * href: /gift-shop/#footer
      * description: |
      *   In the footer, the year of the site's creation is expressed in Roman numerals.

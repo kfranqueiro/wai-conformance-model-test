@@ -50,11 +50,12 @@ const { Content } = await render(category);
  * location: Music Collection
  * href: /collections/music/#main
  * wcag3:
- *   - Control labels
- *   - Verbosity
+ *   - Interactive element names available
  * description: |
  *   The link for each entry is overly verbose, due to the inclusion of
  *   each entry's image (with alt text).
+ * discussionItems:
+ *   - Is it a stretch to fail this for Interactive element names available? (The verbosity requirement was removed)
  */
 const shouldWrapImageInLink =
   getMode() === "broken" && category.id === "music";
@@ -63,7 +64,7 @@ const shouldWrapImageInLink =
  * location: Sports Collection
  * href: /collections/sports/#main
  * wcag2: 1.1.1
- * wcag3: Equivalent text alternative
+ * wcag3: Image alternatives available
  * description: |
  *   The alt text on each entry's image repeats the entry's title,
  *   rather than describing the image.
@@ -72,7 +73,7 @@ const shouldWrapImageInLink =
  * @break
  * location: Sports Collection
  * href: /collections/sports/#main
- * wcag3: Relevant focus
+ * wcag3: Focus relevant
  * description: |
  *   Each collection's image and title are independently linked,
  *   requiring focus to be advanced twice to reach the next unique link.
@@ -89,7 +90,7 @@ const shouldDuplicateLink =
      * location: Technology Collection
      * href: /collections/technology/#main
      * wcag2: 2.4.10
-     * wcag3: Section labels
+     * wcag3: Sections labeled
      * description: The page doesn't have an H1.
      */
   }
@@ -103,7 +104,7 @@ const shouldDuplicateLink =
      * wcag2:
      *   - 2.3.1
      *   - 2.3.2
-     * wcag3: Flashing
+     * wcag3: No flashing
      * description: The image thumbnails in the exhibit list on this page flash 4 times within a one-second period.
      * photosensitivity: true
      */
@@ -112,8 +113,11 @@ const shouldDuplicateLink =
      * location: Home Collection
      * href: /collections/home/#main
      * wcag2: 2.3.3
-     * wcag3: Motion
+     * wcag3: No visual motion
      * description: Each individual exhibit page under the Home collection includes a parallax effect on the background image.
+     * discussionItems:
+     *   - Does this fail WCAG 3 No visual motion or not?
+     *     It only lasts for more than 5 seconds if the user scrolls continuously for that long...
      */
     category.data.dangerous && (
       <Modal id="warning-modal" mode="fixed">
@@ -161,7 +165,7 @@ const shouldDuplicateLink =
                  * location: Sports Collection
                  * href: /collections/sports/#main
                  * wcag2: 2.4.7
-                 * wcag3: Keyboard focus appearance
+                 * wcag3: Focus indicator contrast sufficient
                  * description: There is no visible focus outline when a collection's image is focused.
                  */
               }

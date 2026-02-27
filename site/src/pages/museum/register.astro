@@ -40,8 +40,8 @@ import Layout from "@/layouts/Layout.astro";
        * @break
        * href: "#prove-youre-a-human"
        * wcag2: 1.1.1
-       * wcag3: Equivalent text alternative
-       * description: A CAPTCHA is required and no alternative is provided.
+       * wcag3: Image alternatives available
+       * description: A CAPTCHA image is required and no text alternative is provided.
        */
       /**
        * @break
@@ -49,7 +49,7 @@ import Layout from "@/layouts/Layout.astro";
        * wcag2:
        *   - 3.3.8
        *   - 3.3.9
-       * wcag3: No cognitive tests
+       * wcag3: Cognitive test alternatives available
        * description: A cognitive test is present on the Register page.
        */
     }
@@ -59,6 +59,7 @@ import Layout from "@/layouts/Layout.astro";
        * @break
        * href: "#prove-youre-a-human"
        * wcag2: 1.4.1
+       * wcag3: Focus indicator contrast sufficient
        * description: |
        *   The focused state of the CAPTCHA field only affects its existing border,
        *   and does not have sufficient contrast against the unfocused state.
@@ -67,7 +68,7 @@ import Layout from "@/layouts/Layout.astro";
        * @break
        * href: "#prove-youre-a-human"
        * wcag2: 2.4.13
-       * wcag3: Custom indicator
+       * wcag3: Focus indicator size sufficient
        * description: |
        *   The focused state of the CAPTCHA field only affects a 1px-thick border,
        *   and does not have sufficient contrast against the unfocused state.
@@ -75,14 +76,14 @@ import Layout from "@/layouts/Layout.astro";
       /**
        * @break
        * href: "#prove-youre-a-human"
-       * wcag3: Control contrast
+       * wcag3: Interactive element contrast sufficient
        * description:
        *   - The CAPTCHA field has an invisible text cursor/caret.
        *   - |
        *     The CAPTCHA field is initially empty and indicated only by a
        *     low-contrast underline, making its target area ambiguous.
        * discussionItems:
-       *   - Does the invisible text cursor/caret fail Control contrast?
+       *   - Does the invisible text cursor/caret fail INteractive element contrast?
        */
     }
     <label

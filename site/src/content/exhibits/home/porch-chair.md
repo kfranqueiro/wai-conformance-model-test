@@ -7,7 +7,7 @@ content note: This content was generated with a prompt to make heavy use of idio
 breaklocation: Home Collection
 breakprocess: collections
 breaks:
-  - wcag3: Simplified written content
+  - wcag3: Non-literal language explained
     description: The Porch Chair page makes use of idioms, synonyms, and metaphors.
 ---
 

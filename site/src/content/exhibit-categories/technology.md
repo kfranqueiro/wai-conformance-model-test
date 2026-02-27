@@ -4,7 +4,7 @@ breaklocation: Technology Collection
 breakprocess: collections
 breaks:
 - wcag2: 1.1.1
-  wcag3: Equivalent text alternative
+  wcag3: Image alternatives available
   description: Some of the exhibit images lack alt text.
 ---
 

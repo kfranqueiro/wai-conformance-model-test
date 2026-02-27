@@ -11,7 +11,7 @@ breaklocation: Blog
 breakprocess: blog
 breaks:
   - wcag2: 1.2.4
-    wcag3: Captions
+    wcag3: Captions available (prerecorded)
     description: |
       The topmost blog post contains a video element representing a live broadcast,
       which does not include any captions.

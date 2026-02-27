@@ -45,7 +45,7 @@ const collectionMap = {
 /**
  * @break
  * wcag2: 2.2.2
- * wcag3: Motion
+ * wcag3: No visual motion
  * description:
  *   - The carousel does not include controls to stop moving and updating.
  *   - The promotional video at the bottom of the home page loops infinitely and does not have controls to pause.
@@ -57,7 +57,7 @@ const collectionMap = {
       /**
        * @break
        * wcag2: 1.4.6
-       * wcag3: Minimum text contrast
+       * wcag3: Text contrast sufficient (minimum)
        * description: |
        *   The semi-transparent backdrop between the carousel text and background image
        *   is not always enough to guarantee sufficient contrast.
@@ -72,8 +72,9 @@ const collectionMap = {
             /**
              * @break
              * wcag2: 1.3.2
-             * wcag3: Unambiguous text
              * description: The overline text over each title in the carousel uses space characters between each letter.
+             * discussionItems:
+             *   - For WCAG 3, this used to be filed under Unambiguous text, which no longer exists; is there a suitable alternative to fail it under?
              */
           }
           <div class="overline">L A T E S T &nbsp; {

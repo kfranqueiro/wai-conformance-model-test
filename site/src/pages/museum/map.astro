@@ -18,14 +18,14 @@ import Layout from "@/layouts/Layout.astro";
         /**
          * @break
          * wcag2: 1.3.3
-         * wcag3: Sensory characteristics
+         * wcag3: Sensory characteristics not relied on
          * description: |
          *   Instructions allude only to color when describing visible map controls, which is insufficient to disambiguate for colorblind users.
          */
         /**
          * @break
          * wcag2: 1.4.1
-         * wcag3: Use of hue
+         * wcag3: Hue not relied on
          * description: |
          *   The map controls for zooming and panning vertically use the same icons, and are distinguished only by color.
          */
@@ -68,19 +68,19 @@ import Layout from "@/layouts/Layout.astro";
         /**
          * @break
          * wcag2: 1.1.1
-         * wcag3: Equivalent text alternative
+         * wcag3: Image alternatives available
          * description: The arrow buttons over the map do not contain text labels.
          */
         /**
          * @break
          * wcag2: 1.4.10
-         * wcag3: Reflow
+         * wcag3: Layout reflow supported
          * description: The controls disappear when magnified.
          */
         /**
          * @break
          * wcag2: 2.4.13
-         * wcag3: Custom indicator
+         * wcag3: Focus indicator contrast sufficient
          * description: |
          *   The map controls use a dotted focus outline with a color that falls well below
          *   3:1 contrast against the underlying map.
@@ -160,11 +160,8 @@ import Layout from "@/layouts/Layout.astro";
   /**
    * @break
    * wcag2: 2.5.1
-   * wcag3: Complex pointer inputs
+   * wcag3: Simple pointer input available
    * description: On mobile devices, the only way to zoom the map is via a pinch gesture.
-   * discussionItems:
-   *   - In WCAG 3, the Gestures guideline suggests not requiring dragging,
-   *     but no individual requirement seems to explicitly prohibit it?
    */
   container.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 || (primaryPointer && secondaryPointer)) return;
@@ -232,14 +229,15 @@ import Layout from "@/layouts/Layout.astro";
   /**
    * @break
    * wcag2: 2.1.4
-   * wcag3: Conflicting keyboard commands
+   * wcag3:
+   *   - No keyboard conflicts
    * description: |
    *   Single-character key bindings are implemented across the entire page
    *   for map movement, and cannot be turned off or customized.
    */
   /**
    * @break
-   * wcag3: Comparable keyboard effort
+   * wcag3: Keyboard effort comparable
    * description: Panning the map can require many more keypresses compared to dragging a pointer device.
    */
   document.body.addEventListener("keydown", (event) => {

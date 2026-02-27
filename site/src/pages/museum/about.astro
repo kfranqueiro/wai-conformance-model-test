@@ -25,8 +25,8 @@ const headerNavLinks =
      *   - 1.1.1
      *   - 4.1.2
      * wcag3:
-     *   - Equivalent text alternative
-     *   - Name, role, value, state
+     *   - Image alternatives available
+     *   - Roles, values, states, properties available
      * description: |
      *   Images of text are used for headings,
      *   but the image has no accessible name / text equivalent.
@@ -38,12 +38,12 @@ const headerNavLinks =
      */
     /**
      * @break
-     * wcag3: Clear relationships
+     * wcag3: Relationships detectable
      * description: The headings and other structural elements are not reflected in code.
      */
     /**
      * @break
-     * wcag3: White spacing
+     * wcag3: Blocks of content available (minimum)
      * description: There is no margin between paragraphs.
      */
   }
@@ -64,7 +64,7 @@ const headerNavLinks =
        */
       /**
        * @break
-       * wcag3: Text style
+       * wcag3: Text style readable (minimum)
        * description: |
        *   The mission statement and the days of the week in the schedule are rendered
        *   in a cursive handwriting font.
@@ -86,7 +86,7 @@ const headerNavLinks =
        * @break
        * href: "#opening-hours"
        * wcag2: 1.3.1
-       * wcag3: Distinguishable relationships
+       * wcag3: Relationships detectable
        * description: |
        *   The table's layout changes at smaller breakpoints,
        *   but the relevant ARIA attributes aren't also updated,
@@ -98,7 +98,7 @@ const headerNavLinks =
        * @break
        * href: "#opening-hours"
        * wcag2: 1.4.3
-       * wcag3: Minimum text contrast
+       * wcag3: Text contrast sufficient (minimum)
        * description: The text in the table header cells has insufficent contrast.
        */
     }
@@ -160,8 +160,8 @@ const headerNavLinks =
        * href: "#travel-directions"
        * wcag2: 1.3.1
        * wcag3:
-       *   - Image role
-       *   - Section labels
+       *   - Images detectable
+       *   - Sections labeled
        * description: |
        *   The Travel Directions heading is marked up as a <code>div</code> with no ARIA role.
        */
@@ -205,8 +205,8 @@ const headerNavLinks =
        * href: "#travel-directions"
        * wcag2: 2.4.9
        * wcag3:
-       *   - Control labels
-       *   - Name, role, value, state
+       *   - Interactive element names available
+       *   - Roles, values, states, properties available
        * description: The "here" link under the Travel Directions heading is ambiguous.
        * discussionItems:
        *   - Does this fail Name, role, value, state for WCAG 3?
