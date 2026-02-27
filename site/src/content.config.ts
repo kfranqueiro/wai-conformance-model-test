@@ -207,7 +207,12 @@ export const collections = {
         // but wcag3.json only comes across as a generic string array,
         // so validate using a refinement instead
         wcag3: singleOrArray(
-          z.string().refine((value) => wcag3Values.includes(value))
+          z
+            .string()
+            .refine(
+              (value) => wcag3Values.includes(value),
+              "Unrecognized WCAG 3 provision shortname"
+            )
         )
           .optional()
           .transform(transformToOptionalArray),
